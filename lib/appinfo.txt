@@ -1,0 +1,12 @@
+App information:
+  - App ID: 1:137939624185:android:5780ce1e4571b6685fc228
+  - Display name: com.aerovania.app
+  - Package name: com.aerovania.com
+
+You can run this command to print out your new app's Google Services config:
+firebase apps:sdkconfig ANDROID 1:137939624185:android:5780ce1e4571b6685fc228
+
+Platform  Firebase App Id
+web       1:137939624185:web:16eafea4aa2d0a155fc228
+android   1:137939624185:android:d6d24c4ec68931655fc228
+ios       1:137939624185:ios:4a4cced6a0e535e05fc228
