@@ -2,6 +2,7 @@
 // import 'package:firebase_auth/firebase_auth.dart';
 import 'package:aerovania_app_1/Pages/course_details.dart';
 import 'package:aerovania_app_1/Pages/home_page.dart';
+import 'package:aerovania_app_1/Pages/lists/recommended_courses.dart';
 import 'package:aerovania_app_1/components/color.dart';
 import 'package:aerovania_app_1/utils/data.dart';
 import 'package:aerovania_app_1/widgets/category_box.dart';
@@ -12,6 +13,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:sidebarx/sidebarx.dart';
 
 // import 'chat_page.dart';
@@ -182,7 +184,7 @@ class _HomeScreenState extends State<HomeScreen> {
           const SizedBox(
             height: 15,
           ),
-          const Padding(
+          Padding(
             padding: EdgeInsets.fromLTRB(15, 0, 15, 10),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -194,9 +196,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       fontWeight: FontWeight.w600,
                       color: AppColor.textColor),
                 ),
-                Text(
-                  "See all",
-                  style: TextStyle(fontSize: 14, color: AppColor.darker),
+                GestureDetector(
+                  onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                      builder: ((context) => const RecommendedCourses()))),
+                  child: Text(
+                    "See all",
+                    style: TextStyle(fontSize: 14, color: AppColor.darker),
+                  ),
                 ),
               ],
             ),

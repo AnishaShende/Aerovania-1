@@ -81,7 +81,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: 40,
-                vertical: 5,
+                vertical: 30,
               ),
               child: Row(
                 children: [
@@ -116,53 +116,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 ],
               ),
             ),
-            const SizedBox(height: 20),
-            const Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: 20,
-                vertical: 10,
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Divider(
-                      color: Color(0xFFE8ECF4),
-                      thickness: 1,
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 10,
-                    ),
-                    child: Text(
-                      "OR",
-                      style: TextStyle(color: Colors.grey),
-                    ),
-                  ),
-                  Expanded(
-                    child: Divider(
-                      color: Color(0xFFE8ECF4),
-                      thickness: 1,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            // const Spacer(),
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 40.0, vertical: 40.0),
-              child: MyButton(
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const HomePage()));
-                },
-                text: 'Continue as a guest',
-              ),
-            ),
-            const Spacer(),
           ],
         ),
       ),

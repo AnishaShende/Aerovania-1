@@ -82,9 +82,9 @@ class FeatureItem extends StatelessWidget {
               fontWeight: FontWeight.w600,
             ),
           ),
-          const SizedBox(
-            height: 10,
-          ),
+          // const SizedBox(
+          //   height: 10,
+          // ),
           _buildAttributes(),
         ],
       ),
@@ -119,6 +119,7 @@ class FeatureItem extends StatelessWidget {
   Widget _buildAttributes() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
+      mainAxisSize: MainAxisSize.max,
       children: [
         _getAttribute(
           Icons.play_circle_outlined,

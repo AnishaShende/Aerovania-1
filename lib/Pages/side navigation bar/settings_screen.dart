@@ -1,5 +1,6 @@
 import 'package:aerovania_app_1/Pages/side%20navigation%20bar/edit_profile.dart';
 import 'package:aerovania_app_1/Pages/side%20navigation%20bar/welcome_screen.dart';
+import 'package:aerovania_app_1/components/dialog_box.dart';
 import 'package:aerovania_app_1/services/auth/auth_services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -143,7 +144,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       borderRadius: BorderRadius.circular(20)),
                 ),
                 onPressed: () {
-                  signOut();
+                  MyDialogBox(
+                    title: const Text("Sign Out"),
+                    content: const Text("Are you sure you want to sign out?"),
+                    onTapFunc: () {},
+                  );
                 },
                 child: const Text("Sign Out",
                     style: TextStyle(

@@ -29,9 +29,9 @@
 - [ ] fix bottom overflows
 - [x] loading indicator in register screen
 - [x] fix forget password screen
-- [ ] ratings are hiding in featured courses
+- [x] ratings are hiding in featured courses
 - [ ] fix all course viewing option
-- [ ] fix see all option
+- [x] fix see all option
 - [ ] add loading indicator in search page
 
 ## Screen to create
