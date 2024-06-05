@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class ContactScreen extends StatefulWidget {
   const ContactScreen({super.key});
@@ -28,13 +29,37 @@ class _ContactScreenState extends State<ContactScreen> {
       required String url,
     }) async {
       var a = Uri.parse(url);
+      var controller = WebViewController()
+        ..setJavaScriptMode(JavaScriptMode.unrestricted)
+        ..setBackgroundColor(const Color(0x00000000))
+        ..setNavigationDelegate(
+          NavigationDelegate(
+            onProgress: (int progress) {
+              // Update loading bar.
+            },
+            onPageStarted: (String url) {},
+            onPageFinished: (String url) {},
+            onHttpError: (HttpResponseError error) {},
+            onWebResourceError: (WebResourceError error) {},
+            onNavigationRequest: (NavigationRequest request) {
+              if (request.url.startsWith('https://www.youtube.com/')) {
+                return NavigationDecision.prevent;
+              }
+              return NavigationDecision.navigate;
+            },
+          ),
+        )
+        ..loadRequest(Uri.parse(url));
 
       if (await canLaunchUrl(a)) {
-        await launchUrl(a);
+        WebViewWidget(controller: controller
+            // intialUrl: a,
+            // launchUrl(a);
+            );
       } else {
-        const SnackBar(
-          content: Text('Could not launch url'),
-        );
+        ScaffoldMessenger.of(context).clearSnackBars();
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Unable to lauch URL!')));
         throw 'Could not launch $url';
       }
     }
@@ -85,7 +110,7 @@ class _ContactScreenState extends State<ContactScreen> {
                     shape: BoxShape.circle,
                     image: const DecorationImage(
                         fit: BoxFit.cover,
-                        image: NetworkImage(
+                        image: AssetImage(
                           'assets/images/applogo.png',
                         ))),
               ),
@@ -272,7 +297,7 @@ class _ContactScreenState extends State<ContactScreen> {
                 ),
               ),
               SizedBox(
-                height: height * 0.03,
+                height: height * 0.01,
               ),
               Padding(
                 padding: const EdgeInsets.all(0),
@@ -289,7 +314,7 @@ class _ContactScreenState extends State<ContactScreen> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.all(5),
+                      padding: const EdgeInsets.all(0),
                       child: IconButton(
                         onPressed: () {
                           _launchURLApp(url: links[1]);
@@ -298,7 +323,7 @@ class _ContactScreenState extends State<ContactScreen> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.all(5),
+                      padding: const EdgeInsets.all(0),
                       child: IconButton(
                         onPressed: () {
                           _launchURLApp(url: links[2]);
@@ -307,7 +332,7 @@ class _ContactScreenState extends State<ContactScreen> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.all(5),
+                      padding: const EdgeInsets.all(0),
                       child: IconButton(
                         onPressed: () {
                           _launchURLApp(url: links[3]);
@@ -316,7 +341,7 @@ class _ContactScreenState extends State<ContactScreen> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.all(5),
+                      padding: const EdgeInsets.all(0),
                       child: IconButton(
                         onPressed: () {
                           _launchURLApp(url: links[4]);

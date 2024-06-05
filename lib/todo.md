@@ -3,12 +3,14 @@
 - [ ] Splash screen
 - [x] Icons
 - [ ] Bookmark course animation
-- [ ] Greeting text on app bar
+- [x] Greeting text on app bar
+- [x] Current username on appbar
 - [ ] Dialog box for signout
-- [ ] New side nav bar
+- [x] New side nav bar
 - [ ] Side nav bar should be available for bottom nav bar screens
 - [ ] Webview for contact us page for android
-- [ ] Enhance Setting and Contact Us screen
+- [ ] Enhance Setting Screen
+- [x] Enhance Contact Us screen
 
 ## Backend things
 
@@ -22,14 +24,15 @@
 
 ## UI things
 
-- [ ] Form validation (login / signup)
+- [x] Form validation (login / signup)
 - [ ] button clicks animation
 - [ ] fix bottom overflows
-- [ ] loading indicator in register screen
-- [ ] fix forget password screen
+- [x] loading indicator in register screen
+- [x] fix forget password screen
 - [ ] ratings are hiding in featured courses
 - [ ] fix all course viewing option
 - [ ] fix see all option
+- [ ] add loading indicator in search page
 
 ## Screen to create
 

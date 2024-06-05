@@ -68,7 +68,7 @@ class FeatureItem extends StatelessWidget {
   Widget _buildInfo() {
     return Container(
       width: width - 20,
-      padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
+      padding: EdgeInsets.fromLTRB(0, 0, 2, 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -118,24 +118,24 @@ class FeatureItem extends StatelessWidget {
 
   Widget _buildAttributes() {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         _getAttribute(
           Icons.play_circle_outlined,
           AppColor.labelColor,
           data["session"],
         ),
-        const SizedBox(
-          width: 12,
-        ),
+        // const SizedBox(
+        //   width: 12,
+        // ),
         _getAttribute(
           Icons.schedule_rounded,
           AppColor.labelColor,
           data["duration"],
         ),
-        const SizedBox(
-          width: 12,
-        ),
+        // const SizedBox(
+        //   width: 12,
+        // ),
         _getAttribute(
           Icons.star,
           AppColor.yellow,
@@ -146,23 +146,26 @@ class FeatureItem extends StatelessWidget {
   }
 
   _getAttribute(IconData icon, Color color, String info) {
-    return Row(
-      children: [
-        Icon(
-          icon,
-          size: 18,
-          color: color,
-        ),
-        const SizedBox(
-          width: 3,
-        ),
-        Text(
-          info,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: TextStyle(color: AppColor.labelColor, fontSize: 13),
-        ),
-      ],
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(1, 0, 1, 0),
+      child: Row(
+        children: [
+          Icon(
+            icon,
+            size: 18,
+            color: color,
+          ),
+          const SizedBox(
+            width: 3,
+          ),
+          Text(
+            info,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(color: AppColor.labelColor, fontSize: 13),
+          ),
+        ],
+      ),
     );
   }
 }

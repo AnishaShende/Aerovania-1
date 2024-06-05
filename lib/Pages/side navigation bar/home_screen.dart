@@ -9,9 +9,10 @@ import 'package:aerovania_app_1/widgets/feature_item.dart';
 import 'package:aerovania_app_1/widgets/notification_box.dart';
 import 'package:aerovania_app_1/widgets/recommend_item.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:sidebarx/sidebarx.dart';
-import 'package:aerovania_app_1/Pages/home_page.dart';
 
 // import 'chat_page.dart';
 
@@ -24,6 +25,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int selectedIndex = 0;
+  var username = '';
 
   @override
   void initState() {
@@ -37,50 +39,85 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      drawer: ExampleSidebarX(controller: _controller),
+    return FutureBuilder<String>(
+      future: retrieveName(), // the Future your FutureBuilder will work with
+      builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+              child:
+                  CircularProgressIndicator()); // show a loading spinner while waiting
+        } else if (snapshot.hasError) {
+          return Text(
+              'Error: ${snapshot.error}'); // show an error message if something went wrong
+        } else {
+          return Scaffold(
+            drawer: SafeArea(child: ExampleSidebarX(controller: _controller)),
 
-      // body: _buildUserList(),
-      backgroundColor: const Color(0xffbfe0f8),
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            leading: IconButton(
-              onPressed: () {
-                // ExampleSidebarX(controller: _controller);
-                // _controller.setExtended(true);
-                //   Navigator.push(
-                //     context,
-                //     MaterialPageRoute(builder: (context) => _pages[_controller.selectedIndex]),
-                //   );
-                //   _pages[_controller.selectedIndex];
-                //   if (!Platform.isAndroid && !Platform.isIOS) {
-                //     _controller.setExtended(true);
-                //   }
-                //   _key.currentState?.openDrawer();
-                Scaffold.of(context).openDrawer();
-              },
-              icon: const Icon(Icons.menu, color: Colors.black),
+            // body: _buildUserList(),
+            backgroundColor: const Color(0xffbfe0f8),
+            body: CustomScrollView(
+              slivers: [
+                SliverAppBar(
+                  leading: IconButton(
+                    onPressed: () {
+                      // ExampleSidebarX(controller: _controller);
+                      // _controller.setExtended(true);
+                      //   Navigator.push(
+                      //     context,
+                      //     MaterialPageRoute(builder: (context) => _pages[_controller.selectedIndex]),
+                      //   );
+                      //   _pages[_controller.selectedIndex];
+                      //   if (!Platform.isAndroid && !Platform.isIOS) {
+                      //     _controller.setExtended(true);
+                      //   }
+                      //   _key.currentState?.openDrawer();
+                      Scaffold.of(context).openDrawer();
+                    },
+                    icon: const Icon(Icons.menu, color: Colors.black),
+                  ),
+                  backgroundColor: AppColor.appBarColor,
+                  pinned: true,
+                  snap: true,
+                  floating: true,
+                  title: _buildAppBar(),
+                ),
+                SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) => _buildBody(),
+                    childCount: 1,
+                  ),
+                ),
+                //   SliverToBoxAdapter(
+                //     child: _bottomnavpages[selectedIndex],
+                // ),
+                // _bottomnavpages[selectedIndex],
+              ],
             ),
-            backgroundColor: AppColor.appBarColor,
-            pinned: true,
-            snap: true,
-            floating: true,
-            title: _buildAppBar(),
-          ),
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (context, index) => _buildBody(),
-              childCount: 1,
-            ),
-          ),
-          //   SliverToBoxAdapter(
-          //     child: _bottomnavpages[selectedIndex],
-          // ),
-          // _bottomnavpages[selectedIndex],
-        ],
-      ),
+          );
+        }
+      },
     );
+  }
+
+  String getGreeting() {
+    var hour = DateTime.now().hour;
+    if (hour < 12) {
+      return 'Good Morning!';
+    }
+    if (hour < 17) {
+      return 'Good Afternoon!';
+    }
+    return 'Good Evening!';
+  }
+
+  Future<String> retrieveName() async {
+    var currentUser = FirebaseAuth.instance.currentUser;
+    var document = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(currentUser!.uid)
+        .get();
+    username = document.data()?['username'] ?? '';
+    return username;
   }
 
   Widget _buildAppBar() {
@@ -93,7 +130,7 @@ class _HomeScreenState extends State<HomeScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                profile["name"]!,
+                username,
                 style: const TextStyle(
                   color: AppColor.labelColor,
                   fontSize: 14,
@@ -102,9 +139,9 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(
                 height: 5,
               ),
-              const Text(
-                "Good Morning!",
-                style: TextStyle(
+              Text(
+                getGreeting(),
+                style: const TextStyle(
                   color: AppColor.textColor,
                   fontWeight: FontWeight.w500,
                   fontSize: 18,

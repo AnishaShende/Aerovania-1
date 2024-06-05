@@ -356,158 +356,161 @@ class ExampleSidebarX extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SidebarX(
-      controller: _controller,
-      theme: SidebarXTheme(
-        margin: const EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          color: canvasColor,
-          borderRadius: BorderRadius.circular(20),
-        ),
-        hoverColor: scaffoldBackgroundColor,
-        textStyle: TextStyle(color: Colors.white.withOpacity(0.7)),
-        selectedTextStyle: const TextStyle(color: Colors.white),
-        itemTextPadding: const EdgeInsets.only(left: 30),
-        selectedItemTextPadding: const EdgeInsets.only(left: 30),
-        itemDecoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: canvasColor),
-        ),
-        selectedItemDecoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(
-            color: actionColor.withOpacity(0.37),
+    return SafeArea(
+      child: SidebarX(
+        controller: _controller,
+        theme: SidebarXTheme(
+          margin: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: canvasColor,
+            // color: white,
+            borderRadius: BorderRadius.circular(20),
           ),
-          gradient: const LinearGradient(
-            colors: [accentCanvasColor, canvasColor],
+          hoverColor: scaffoldBackgroundColor,
+          textStyle: TextStyle(color: Colors.black.withOpacity(0.7)),
+          selectedTextStyle: const TextStyle(color: Colors.black),
+          itemTextPadding: const EdgeInsets.only(left: 30),
+          selectedItemTextPadding: const EdgeInsets.only(left: 30),
+          itemDecoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            // border: Border.all(color: canvasColor),
           ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.28),
-              blurRadius: 30,
-            )
-          ],
+          selectedItemDecoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(
+              color: actionColor.withOpacity(0.37),
+            ),
+            gradient: const LinearGradient(
+              colors: [canvasColor, canvasColor],
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.28),
+                blurRadius: 30,
+              )
+            ],
+          ),
+          iconTheme: IconThemeData(
+            color: Colors.black.withOpacity(0.7),
+            size: 20,
+          ),
+          selectedIconTheme: const IconThemeData(
+            color: Colors.black,
+            size: 20,
+          ),
         ),
-        iconTheme: IconThemeData(
-          color: Colors.white.withOpacity(0.7),
-          size: 20,
+        extendedTheme: const SidebarXTheme(
+          width: 200,
+          decoration: BoxDecoration(
+            color: Colors.white, //canvasColor,
+          ),
         ),
-        selectedIconTheme: const IconThemeData(
-          color: Colors.white,
-          size: 20,
-        ),
+        footerDivider: divider,
+        headerBuilder: (context, extended) {
+          return SizedBox(
+            height: 100,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Image.asset('assets/images/applogo.png'),
+            ),
+          );
+        },
+        items: [
+          SidebarXItem(
+            icon: Icons.home,
+            label: 'Home',
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const HomeScreen()),
+              );
+              // const HomeScreen();
+            },
+          ),
+          SidebarXItem(
+            icon: Icons.book,
+            label: 'Courses',
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const CourseScreen()),
+              );
+              // const CourseScreen();
+            },
+          ),
+          SidebarXItem(
+            icon: Icons.airplanemode_active,
+            label: 'Products',
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const ProductScreen()),
+              );
+              // const ProductScreen();
+            },
+          ),
+          SidebarXItem(
+            icon: Icons.history,
+            label: 'History',
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const HistoryScreen()),
+              );
+              // const HistoryScreen();
+            },
+          ),
+          SidebarXItem(
+            icon: Icons.photo_library,
+            label: 'Media',
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const MediaScreen()),
+              );
+              // const MediaScreen();
+            },
+          ),
+          SidebarXItem(
+            icon: Icons.settings,
+            label: 'Settings',
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const SettingsScreen()),
+              );
+              // const SettingsScreen();
+            },
+          ),
+          SidebarXItem(
+            icon: Icons.info_outline,
+            label: 'About',
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const AboutScreen()),
+              );
+              // const AboutScreen();
+            },
+            // onTap: ,
+          ),
+          SidebarXItem(
+            icon: Icons.perm_phone_msg_sharp,
+            label: 'Contact Us',
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const ContactScreen()),
+              );
+              // const ContactScreen();
+            },
+          ),
+          // const SidebarXItem(
+          //   iconWidget: FlutterLogo(size: 20),
+          //   label: 'Flutter',
+          // ),
+        ],
       ),
-      extendedTheme: const SidebarXTheme(
-        width: 200,
-        decoration: BoxDecoration(
-          color: canvasColor,
-        ),
-      ),
-      footerDivider: divider,
-      headerBuilder: (context, extended) {
-        return SizedBox(
-          height: 100,
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Image.asset('assets/images/applogo.png'),
-          ),
-        );
-      },
-      items: [
-        SidebarXItem(
-          icon: Icons.home,
-          label: 'Home',
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const HomeScreen()),
-            );
-            // const HomeScreen();
-          },
-        ),
-        SidebarXItem(
-          icon: Icons.book,
-          label: 'Courses',
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const CourseScreen()),
-            );
-            // const CourseScreen();
-          },
-        ),
-        SidebarXItem(
-          icon: Icons.airplanemode_active,
-          label: 'Products',
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const ProductScreen()),
-            );
-            // const ProductScreen();
-          },
-        ),
-        SidebarXItem(
-          icon: Icons.history,
-          label: 'History',
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const HistoryScreen()),
-            );
-            // const HistoryScreen();
-          },
-        ),
-        SidebarXItem(
-          icon: Icons.photo_library,
-          label: 'Media',
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const MediaScreen()),
-            );
-            // const MediaScreen();
-          },
-        ),
-        SidebarXItem(
-          icon: Icons.settings,
-          label: 'Settings',
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const SettingsScreen()),
-            );
-            // const SettingsScreen();
-          },
-        ),
-        SidebarXItem(
-          icon: Icons.info_outline,
-          label: 'About',
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const AboutScreen()),
-            );
-            // const AboutScreen();
-          },
-          // onTap: ,
-        ),
-        SidebarXItem(
-          icon: Icons.perm_phone_msg_sharp,
-          label: 'Contact Us',
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const ContactScreen()),
-            );
-            // const ContactScreen();
-          },
-        ),
-        // const SidebarXItem(
-        //   iconWidget: FlutterLogo(size: 20),
-        //   label: 'Flutter',
-        // ),
-      ],
     );
   }
 }
@@ -577,9 +580,9 @@ class ExampleSidebarX extends StatelessWidget {
 // }
 
 const primaryColor = Color(0xFF685BFF);
-const canvasColor = Color(0xFF2E2E48);
+const canvasColor = Color(0xffbfe0f8); // Color(0xFF2E2E48);
 const scaffoldBackgroundColor = Color(0xFF464667);
 const accentCanvasColor = Color(0xFF3E3E61);
 const white = Colors.white;
 final actionColor = const Color(0xFF5F5FA7).withOpacity(0.6);
-final divider = Divider(color: white.withOpacity(0.3), height: 1);
+final divider = Divider(color: Colors.blue.withOpacity(0.3), height: 1);
