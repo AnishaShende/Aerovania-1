@@ -3,21 +3,20 @@ import 'package:aerovania_app_1/Pages/course_items.dart';
 import 'package:aerovania_app_1/utils/data.dart';
 import 'package:flutter/material.dart';
 
-class RecommendedCourses extends StatefulWidget {
-  const RecommendedCourses({super.key});
+class AllCourses extends StatefulWidget {
+  const AllCourses({super.key});
 
   @override
-  State<RecommendedCourses> createState() => _RecommendedCoursesState();
+  State<AllCourses> createState() => _AllCoursesState();
 }
 
-class _RecommendedCoursesState extends State<RecommendedCourses> {
+class _AllCoursesState extends State<AllCourses> {
   int selectedCategoryIndex = 0;
 
   late ScrollController scrollController;
 
   @override
   void initState() {
-    // TODO: implement initState
     scrollController = ScrollController();
     super.initState();
   }
@@ -29,7 +28,7 @@ class _RecommendedCoursesState extends State<RecommendedCourses> {
       backgroundColor: const Color(0xffbfe0f8),
       appBar: AppBar(
         title: const Text(
-          "Recommended Courses",
+          "All Courses",
           style: TextStyle(
               color: Colors.black, fontSize: 25, fontWeight: FontWeight.w500),
         ),
@@ -55,7 +54,7 @@ class _RecommendedCoursesState extends State<RecommendedCourses> {
                 return Padding(
                   padding: const EdgeInsets.only(top: 5, left: 15, right: 15),
                   child: CourseItem(
-                    data: recommends[index],
+                    data: courses[index],
                     onBookmark: () {
                       courses[index]["is_favorited"] =
                           !courses[index]["is_favorited"];
@@ -69,17 +68,11 @@ class _RecommendedCoursesState extends State<RecommendedCourses> {
                   ),
                 );
               },
-              childCount: recommends.length,
+              childCount: courses.length,
             ),
           ),
         ],
       ),
-      // ListView.builder(
-      //   itemCount: recommends.length,
-      //   itemBuilder: (BuildContext context, int index) {
-      //     return ;
-      //   },
-      // ),
     ));
   }
 }

@@ -2,6 +2,7 @@
 // import 'package:firebase_auth/firebase_auth.dart';
 import 'package:aerovania_app_1/Pages/course_details.dart';
 import 'package:aerovania_app_1/Pages/home_page.dart';
+import 'package:aerovania_app_1/Pages/lists/all_categories.dart';
 import 'package:aerovania_app_1/Pages/lists/recommended_courses.dart';
 import 'package:aerovania_app_1/components/color.dart';
 import 'package:aerovania_app_1/utils/data.dart';
@@ -224,10 +225,16 @@ class _HomeScreenState extends State<HomeScreen> {
           (index) => Padding(
             padding: const EdgeInsets.only(right: 15),
             child: CategoryBox(
-              selectedColor: Colors.white,
-              data: categories[index],
-              onTap: null,
-            ),
+                selectedColor: Colors.white,
+                data: categories[index],
+                onTap: () {
+                  if (index == 0) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const AllCategories()),
+                    );
+                  }
+                }),
           ),
         ),
       ),

@@ -30,7 +30,7 @@
 - [x] loading indicator in register screen
 - [x] fix forget password screen
 - [x] ratings are hiding in featured courses
-- [ ] fix all course viewing option
+- [x] fix all course viewing option
 - [x] fix see all option
 - [ ] add loading indicator in search page
 
