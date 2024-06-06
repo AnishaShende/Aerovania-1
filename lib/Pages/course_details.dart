@@ -1,11 +1,12 @@
 import 'package:aerovania_app_1/components/bookmark_box.dart';
 import 'package:aerovania_app_1/components/lesson_items.dart';
 import 'package:aerovania_app_1/components/color.dart';
-import 'package:aerovania_app_1/components/my_button.dart';
-import 'package:aerovania_app_1/utils/data.dart';
+import 'package:aerovania_app_1/services/video/video_player.dart';
 import 'package:aerovania_app_1/widgets/custom_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:readmore/readmore.dart';
+// import 'package:aerovania_app_1/services/video/storage_service.dart';
 
 class CourseDetails extends StatefulWidget {
   const CourseDetails({super.key, required this.data});
@@ -84,12 +85,57 @@ class _CourseDetailsState extends State<CourseDetails>
   }
 
   Widget getLessons() {
-    return ListView.builder(
-        itemCount: lessons.length,
-        itemBuilder: (context, index) {
-          return LessonItems(
-            data: lessons[index],
-          );
+    return StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection('course_1')
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return Center(child: CircularProgressIndicator());
+          }
+
+          var videos = snapshot.data!.docs;
+
+          // Sort the videos by name
+          videos.sort((a, b) {
+            var aName = a['name'].split('.')[0];
+            var bName = b['name'].split('.')[0];
+            return aName.compareTo(bName);
+          });
+          getVideoName(String name) {
+            name.replaceAll(RegExp('mp4'), '');
+            return name.split('.')[1].toUpperCase();
+          }
+
+          return ListView.builder(
+              itemCount: videos.length,
+              itemBuilder: (context, index) {
+                var video = videos[index];
+                var videoUrl = video['url'];
+                var videoName = video['name'];
+                return GestureDetector(
+                  onTap: () {
+                    print("lesson tapped!");
+                    // FileStorageService().fetchAndStoreMetadata('course_1/videos');
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => VideoPlayerModel(
+                          videoUrl: videoUrl,
+                          name: getVideoName(videoName),
+                        ),
+                      ),
+                    );
+                  },
+                  child: LessonItems(
+                    // Image.asset('assets/appicon.png'),
+                    // data: lessons[index],
+                    name: getVideoName(videoName),
+                    thumbnail: 'assets/images/applogo.png',
+                    duration: '55 min',
+                  ),
+                );
+              });
         });
   }
 
@@ -179,14 +225,14 @@ class _CourseDetailsState extends State<CourseDetails>
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               "About Course",
               style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
                   color: AppColor.textColor),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             ReadMoreText(
@@ -194,9 +240,9 @@ class _CourseDetailsState extends State<CourseDetails>
               // "sds",
               trimLines: 2,
               trimMode: TrimMode.Line,
-              style: TextStyle(fontSize: 14, color: AppColor.labelColor),
+              style: const TextStyle(fontSize: 14, color: AppColor.labelColor),
               // trimCollapsedText: "show more",
-              moreStyle: TextStyle(
+              moreStyle: const TextStyle(
                   fontSize: 14,
                   color: AppColor.primary,
                   fontWeight: FontWeight.w500),
@@ -279,7 +325,7 @@ class _CourseDetailsState extends State<CourseDetails>
           ),
           Expanded(
             child: MaterialButton(
-              color: Color(0xFF1E232C),
+              color: const Color(0xFF1E232C),
               shape: RoundedRectangleBorder(
                 // side: const Border(
                 //   color: Color(0xFF1E232C),

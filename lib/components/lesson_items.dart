@@ -3,8 +3,11 @@ import 'package:aerovania_app_1/widgets/custom_image.dart';
 import 'package:flutter/material.dart';
 
 class LessonItems extends StatelessWidget {
-  const LessonItems({super.key, required this.data});
-  final data;
+  const LessonItems({super.key, required this.name, required this.thumbnail, required this.duration});
+  // final data;
+  final name;
+  final thumbnail;
+  final duration;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +29,7 @@ class LessonItems extends StatelessWidget {
       child: Row(
         children: [
           CustomImage(
-            data["image"] ?? '',
+            thumbnail ?? '',
             radius: 10,
             width: 70,
             height: 70,
@@ -39,7 +42,7 @@ class LessonItems extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  data["name"] ?? 'lessonname',
+                  name ?? 'lessonname',
                   style: TextStyle(
                       color: AppColor.textColor,
                       fontSize: 14,
@@ -59,7 +62,7 @@ class LessonItems extends StatelessWidget {
                       width: 5,
                     ),
                     Text(
-                      data["duration"] ?? '5 min',
+                      duration ?? '5 min',
                       style:
                           TextStyle(color: AppColor.labelColor, fontSize: 13),
                     ),
