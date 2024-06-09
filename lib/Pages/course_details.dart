@@ -101,6 +101,7 @@ class _CourseDetailsState extends State<CourseDetails>
             var aName = a['name'].split('.')[0];
             var bName = b['name'].split('.')[0];
             return aName.compareTo(bName);
+          // re786y`6  ee655t  ` ET655TF565E66TY6EUJT  R67YU7UY6JUJT5E466R56           67uj656ty7u6eujt  r67yu7uy6jujt5e466r56
           });
           getVideoName(String name) {
             name.replaceAll(RegExp('mp4'), '');
