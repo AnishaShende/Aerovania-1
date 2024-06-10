@@ -5,9 +5,9 @@
 - [ ] Bookmark course animation
 - [x] Greeting text on app bar
 - [x] Current username on appbar
-- [ ] Dialog box for signout
+- [x] Dialog box for signout
 - [x] New side nav bar
-- [ ] Side nav bar should be available for bottom nav bar screens
+- [x] Side nav bar should be available for bottom nav bar screens
 - [ ] Webview for contact us page for android
 - [ ] Enhance Setting Screen
 - [x] Enhance Contact Us screen

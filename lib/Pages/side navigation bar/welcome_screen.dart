@@ -1,8 +1,5 @@
-import 'package:aerovania_app_1/Pages/home_page.dart';
 import 'package:aerovania_app_1/Pages/login_page.dart';
-import 'package:aerovania_app_1/components/my_button.dart';
 import 'package:flutter/material.dart';
-
 import '../register_page.dart';
 
 class WelcomeScreen extends StatefulWidget {

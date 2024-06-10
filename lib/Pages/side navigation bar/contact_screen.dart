@@ -1,4 +1,6 @@
+import 'package:aerovania_app_1/Pages/home_page.dart';
 import 'package:flutter/material.dart';
+import 'package:sidebarx/sidebarx.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class ContactScreen extends StatefulWidget {
@@ -10,6 +12,8 @@ class ContactScreen extends StatefulWidget {
 
 class _ContactScreenState extends State<ContactScreen> {
   late WebViewController _controller;
+  final controller = SidebarXController(selectedIndex: 6, extended: true);
+  final _key = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -65,6 +69,8 @@ class _ContactScreenState extends State<ContactScreen> {
     ];
 
     return Scaffold(
+      key: _key,
+      drawer: ExampleSidebarX(controller: controller),
       backgroundColor: const Color(0xffbfe0f8),
       appBar: AppBar(
         title: const Text(
@@ -287,10 +293,10 @@ class _ContactScreenState extends State<ContactScreen> {
 //       //       // launchUrl(a);
 //       //       );
 //       // } else {
-//       //   ScaffoldMessenger.of(context).clearSnackBars();
-//       //   ScaffoldMessenger.of(context).showSnackBar(
-//       //       const SnackBar(content: Text('Unable to lauch URL!')));
-//       //   throw 'Could not launch $url';
+        // ScaffoldMessenger.of(context).clearSnackBars();
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //     const SnackBar(content: Text('Unable to lauch URL!')));
+      //   throw 'Could not launch $url';
 //       // }
 //     // }}
 

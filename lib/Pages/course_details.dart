@@ -86,9 +86,7 @@ class _CourseDetailsState extends State<CourseDetails>
 
   Widget getLessons() {
     return StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance
-            .collection('course_1')
-            .snapshots(),
+        stream: FirebaseFirestore.instance.collection('course_1').snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return Center(child: CircularProgressIndicator());
@@ -101,7 +99,7 @@ class _CourseDetailsState extends State<CourseDetails>
             var aName = a['name'].split('.')[0];
             var bName = b['name'].split('.')[0];
             return aName.compareTo(bName);
-          // re786y`6  ee655t  ` ET655TF565E66TY6EUJT  R67YU7UY6JUJT5E466R56           67uj656ty7u6eujt  r67yu7uy6jujt5e466r56
+            // re786y`6  ee655t  ` ET655TF565E66TY6EUJT  R67YU7UY6JUJT5E466R56           67uj656ty7u6eujt  r67yu7uy6jujt5e466r56
           });
           getVideoName(String name) {
             name.replaceAll(RegExp('mp4'), '');
@@ -193,6 +191,11 @@ class _CourseDetailsState extends State<CourseDetails>
             BookmarkBox(
               isBookmarked: courseData["is_favorited"],
               onTap: () {
+                if (!courseData["is_favorited"]) {
+                  ScaffoldMessenger.of(context).clearSnackBars();
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      content: Text('Course added to favorites!')));
+                }
                 setState(() {
                   courseData["is_favorited"] = !courseData["is_favorited"];
                 });

@@ -231,7 +231,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   if (index == 0) {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const AllCategories()),
+                      MaterialPageRoute(
+                          builder: (context) => const AllCategories()),
                     );
                   }
                 }),

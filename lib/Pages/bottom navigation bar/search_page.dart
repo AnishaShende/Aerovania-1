@@ -1,11 +1,11 @@
 import 'package:aerovania_app_1/Pages/category_items.dart';
 import 'package:aerovania_app_1/Pages/course_details.dart';
 import 'package:aerovania_app_1/Pages/course_items.dart';
+import 'package:aerovania_app_1/Pages/home_page.dart';
 import 'package:aerovania_app_1/components/color.dart';
 import 'package:aerovania_app_1/utils/data.dart';
-// import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-// import 'package:flutter_svg/flutter_svg.dart';
+import 'package:sidebarx/sidebarx.dart';
 
 class SearchScreen extends StatefulWidget {
   // const SearchScreen({super.key});
@@ -17,6 +17,7 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   late ScrollController scrollController;
+  final _key = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -27,28 +28,39 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xffbfe0f8),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: CustomScrollView(
-          controller: scrollController,
-          slivers: [
-            SliverAppBar(
-              automaticallyImplyLeading: false,
-              backgroundColor: const Color(0xffbfe0f8), // AppColor.appBarColor,
-              pinned: true,
-              title: getAppBar(),
-            ),
-            SliverToBoxAdapter(
-              child: getSearchBox(),
-            ),
-            SliverToBoxAdapter(
-              // log("Inside SliverToBoxAdapterrrrrr"),
-              child: getCategories(),
-            ),
-            SliverList(delegate: getCourses())
-          ],
+    return SafeArea(
+      child: Scaffold(
+        key: _key,
+        backgroundColor: const Color(0xffbfe0f8),
+        body: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: CustomScrollView(
+            controller: scrollController,
+            slivers: [
+              SliverAppBar(
+                automaticallyImplyLeading: false,
+                backgroundColor:
+                    const Color(0xffbfe0f8), // AppColor.appBarColor,
+                pinned: true,
+                title: getAppBar(),
+                leading: IconButton(
+                  onPressed: () {
+                    // Navigator.of(context).pop();
+                    Scaffold.of(context).openDrawer();
+                  },
+                  icon: const Icon(Icons.menu, color: Colors.black),
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: getSearchBox(),
+              ),
+              SliverToBoxAdapter(
+                // log("Inside SliverToBoxAdapterrrrrr"),
+                child: getCategories(),
+              ),
+              SliverList(delegate: getCourses())
+            ],
+          ),
         ),
       ),
     );
