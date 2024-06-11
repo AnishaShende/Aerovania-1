@@ -1,23 +1,25 @@
 import 'package:aerovania_app_1/Pages/home_page.dart';
 import 'package:aerovania_app_1/components/color.dart';
 import 'package:flutter/material.dart';
-import 'package:sidebarx/sidebarx.dart';
+import 'package:aerovania_app_1/providers/favorite_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../course_details.dart';
+import '../course_items.dart';
 
-class FavoriteScreen extends StatefulWidget {
-  const FavoriteScreen({super.key});
+class FavoriteScreen extends ConsumerStatefulWidget {
+  const FavoriteScreen({Key? key}) : super(key: key);
 
   @override
-  State<FavoriteScreen> createState() => _FavoriteScreenState();
+  _FavoriteScreenState createState() => _FavoriteScreenState();
 }
 
-class _FavoriteScreenState extends State<FavoriteScreen> {
+class _FavoriteScreenState extends ConsumerState<FavoriteScreen> {
   late ScrollController scrollController;
   final _key = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
-    // TODO: implement initState
-    scrollController = new ScrollController();
+    scrollController = ScrollController();
     super.initState();
   }
 
@@ -26,8 +28,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
     return SafeArea(
       child: Scaffold(
         key: _key,
-        // body: _buildUserList(),
-        backgroundColor: Color(0xffbfe0f8),
+        backgroundColor: const Color(0xffbfe0f8),
         body: Padding(
           padding: const EdgeInsets.all(8.0),
           child: CustomScrollView(
@@ -35,17 +36,18 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
             slivers: [
               SliverAppBar(
                 automaticallyImplyLeading: false,
-                backgroundColor:
-                    const Color(0xffbfe0f8), // AppColor.appBarColor,
+                backgroundColor: const Color(0xffbfe0f8),
                 pinned: true,
                 title: getAppBar(),
                 leading: IconButton(
-                onPressed: () {
-                  // Navigator.of(context).pop();
-                  Scaffold.of(context).openDrawer();
-                },
+                  onPressed: () {
+                    Scaffold.of(context).openDrawer();
+                  },
                   icon: const Icon(Icons.menu, color: Colors.black),
                 ),
+              ),
+              SliverList(
+                delegate: showFavorites(),
               ),
             ],
           ),
@@ -54,7 +56,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
     );
   }
 
-  getAppBar() {
+  Widget getAppBar() {
     return const Row(
       children: [
         Text(
@@ -66,5 +68,70 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
         ),
       ],
     );
+  }
+
+  showFavorites() {
+    final favoriteCourses = ref.watch(favoriteProvider);
+    // Use favoriteCourses here
+    if (favoriteCourses.isEmpty) {
+      return SliverChildBuilderDelegate((context, index) {
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const SizedBox(
+              height: 20,
+            ),
+            const Text(
+              'No Favorites',
+              style: TextStyle(
+                  color: AppColor.textColor,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 24),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            const Text(
+              'You have not added any favorites yet.',
+              style: TextStyle(
+                  color: AppColor.textColor,
+                  fontWeight: FontWeight.w400,
+                  fontSize: 16),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const HomePage(),
+                  ),
+                );
+              },
+              child: const Text('Explore'),
+            ),
+          ],
+        );
+      }, childCount: 1);
+    } else {
+      return SliverChildBuilderDelegate(
+        (context, index) {
+          final course = favoriteCourses[index];
+          return Padding(
+            padding: const EdgeInsets.only(top: 5, left: 15, right: 15),
+            child: CourseItem(
+                data: course,
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => CourseDetails(course: course),
+                  ));
+                }),
+          );
+        },
+        childCount: favoriteCourses.length,
+      );
+    }
   }
 }

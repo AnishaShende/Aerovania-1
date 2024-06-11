@@ -6,10 +6,10 @@ import 'package:flutter/material.dart';
 
 class CourseItem extends StatelessWidget {
   const CourseItem(
-      {super.key, required this.data, this.onBookmark, required this.onTap});
+      {super.key, required this.data, required this.onTap});
 
   final data;
-  final GestureTapCallback? onBookmark;
+  // final GestureTapCallback? onBookmark;
   final GestureTapCallback? onTap;
 
   @override
@@ -48,7 +48,7 @@ class CourseItem extends StatelessWidget {
                           image: DecorationImage(
                               image: imageProvider, fit: BoxFit.cover)),
                     ),
-                    imageUrl: data["image"],
+                    imageUrl: data.image,
                   ),
                 ),
               ],
@@ -59,8 +59,9 @@ class CourseItem extends StatelessWidget {
                 // Container(
                 // alignment: Alignment.topRight,
                 child: BookmarkBox(
-                  onTap: onBookmark,
-                  isBookmarked: data["is_favorited"],
+                  course: data,
+                  // onTap: onBookmark,
+                  // isBookmarked: data["is_favorited"],
                 )),
             //),
             Positioned(
@@ -74,7 +75,7 @@ class CourseItem extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      data["name"],
+                      data.name,
                       style: const TextStyle(
                           fontSize: 18, fontWeight: FontWeight.w500),
                     ),
@@ -86,19 +87,19 @@ class CourseItem extends StatelessWidget {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              getAttribute(Icons.sell_outlined, data["price"],
+                              getAttribute(Icons.sell_outlined, data.price,
                                   AppColor.labelColor),
                               getAttribute(Icons.play_circle_filled_outlined,
-                                  data["session"], AppColor.labelColor),
+                                  data.session, AppColor.labelColor),
                             ],
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               getAttribute(Icons.schedule_outlined,
-                                  data["duration"], AppColor.labelColor),
+                                  data.duration, AppColor.labelColor),
                               getAttribute(Icons.star,
-                                  data["review"].toString(), AppColor.yellow),
+                                  data.review.toString(), AppColor.yellow),
                             ],
                           ),
                         ],

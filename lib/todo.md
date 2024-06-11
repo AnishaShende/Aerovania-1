@@ -1,26 +1,26 @@
 ## Things to fix
 
-- [ ] Splash screen
+- [x] Splash screen
 - [x] Icons
-- [ ] Bookmark course animation
+- [x] Bookmark course animation
 - [x] Greeting text on app bar
 - [x] Current username on appbar
 - [x] Dialog box for signout
 - [x] New side nav bar
 - [x] Side nav bar should be available for bottom nav bar screens
-- [ ] Webview for contact us page for android
+- [x] Webview for contact us page for android
 - [ ] Enhance Setting Screen
 - [x] Enhance Contact Us screen
 
 ## Backend things
 
 - [ ] Google authentication
-- [ ] Video Streaming
+- [x] Video Streaming
 - [ ] Adding equipment buying thing
 - [ ] Buy course
 - [ ] Notification management
 - [ ] Implementation of search functionality
-- [ ] Overall state management using Riverpod
+- [x] Overall state management using Riverpod
 
 ## UI things
 

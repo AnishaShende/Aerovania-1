@@ -3,6 +3,8 @@ import 'package:aerovania_app_1/Pages/course_items.dart';
 import 'package:aerovania_app_1/utils/data.dart';
 import 'package:flutter/material.dart';
 
+import '../../models/course.dart';
+
 class RecommendedCourses extends StatefulWidget {
   const RecommendedCourses({super.key});
 
@@ -55,16 +57,17 @@ class _RecommendedCoursesState extends State<RecommendedCourses> {
                 return Padding(
                   padding: const EdgeInsets.only(top: 5, left: 15, right: 15),
                   child: CourseItem(
-                    data: recommends[index],
-                    onBookmark: () {
-                      courses[index]["is_favorited"] =
-                          !courses[index]["is_favorited"];
-                    },
+                    data: Course.fromMap(recommends[index]),
+                    // onBookmark: () {
+                    //   courses[index]["is_favorited"] =
+                    //       !courses[index]["is_favorited"];
+                    // },
                     onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: ((context) => CourseDetails(
-                                data: {"course": courses[index]},
-                              ))));
+                      Course courseD =
+                        Course.fromMap(recommends[index]);
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => CourseDetails(course: courseD),
+                    ));
                     },
                   ),
                 );

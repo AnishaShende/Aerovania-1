@@ -1,11 +1,11 @@
 import 'package:aerovania_app_1/Pages/category_items.dart';
 import 'package:aerovania_app_1/Pages/course_details.dart';
 import 'package:aerovania_app_1/Pages/course_items.dart';
-import 'package:aerovania_app_1/Pages/home_page.dart';
 import 'package:aerovania_app_1/components/color.dart';
 import 'package:aerovania_app_1/utils/data.dart';
 import 'package:flutter/material.dart';
-import 'package:sidebarx/sidebarx.dart';
+
+import '../../models/course.dart';
 
 class SearchScreen extends StatefulWidget {
   // const SearchScreen({super.key});
@@ -179,15 +179,15 @@ class _SearchScreenState extends State<SearchScreen> {
         return Padding(
           padding: const EdgeInsets.only(top: 5, left: 15, right: 15),
           child: CourseItem(
-            data: courses[index],
-            onBookmark: () {
-              courses[index]["is_favorited"] = !courses[index]["is_favorited"];
-            },
+            data: Course.fromMap(courses[index]),
+            // onBookmark: () {
+            //   courses[index]["is_favorited"] = !courses[index]["is_favorited"];
+            // },
             onTap: () {
+              Course courseD = Course.fromMap(courses[index]);
               Navigator.of(context).push(MaterialPageRoute(
-                  builder: ((context) => CourseDetails(
-                        data: {"course": courses[index]},
-                      ))));
+                builder: (context) => CourseDetails(course: courseD),
+              ));
             },
           ),
         );

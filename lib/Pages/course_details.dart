@@ -1,16 +1,18 @@
 import 'package:aerovania_app_1/components/bookmark_box.dart';
+import 'package:flutter/material.dart';
+import 'package:readmore/readmore.dart';
+// import 'package:aerovania_app_1/components/bookmark_box.dart';
 import 'package:aerovania_app_1/components/lesson_items.dart';
 import 'package:aerovania_app_1/components/color.dart';
 import 'package:aerovania_app_1/services/video/video_player.dart';
 import 'package:aerovania_app_1/widgets/custom_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
-import 'package:readmore/readmore.dart';
-// import 'package:aerovania_app_1/services/video/storage_service.dart';
+import '../models/course.dart';
+// import '../data/dummy_data.dart';
 
 class CourseDetails extends StatefulWidget {
-  const CourseDetails({super.key, required this.data});
-  final data;
+  const CourseDetails({super.key, required this.course});
+  final Course course;
 
   @override
   State<CourseDetails> createState() => _CourseDetailsState();
@@ -19,13 +21,13 @@ class CourseDetails extends StatefulWidget {
 class _CourseDetailsState extends State<CourseDetails>
     with SingleTickerProviderStateMixin {
   late TabController tabController;
-  late var courseData;
+  late Course courseData;
 
   @override
   void initState() {
     super.initState();
     tabController = TabController(length: 2, vsync: this);
-    courseData = widget.data["course"];
+    courseData = widget.course;
   }
 
   @override
@@ -55,9 +57,10 @@ class _CourseDetailsState extends State<CourseDetails>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Hero(
-            tag: courseData["id"].toString() + courseData["image"],
+            tag: courseData.id.toString() + courseData.image,
             child: CustomImage(
-              courseData["image"],
+              courseData.image,
+              fit: BoxFit.cover,
               radius: 10,
               width: double.infinity,
               height: 220,
@@ -66,9 +69,6 @@ class _CourseDetailsState extends State<CourseDetails>
           const SizedBox(
             height: 20,
           ),
-          // SingleChildScrollView(
-          //   child: Column(
-          //     children: [
           getInfo(),
           const Divider(),
           const SizedBox(
@@ -76,9 +76,6 @@ class _CourseDetailsState extends State<CourseDetails>
           ),
           getTabBar(),
           getTabbarPages(),
-          //     ],
-          //   ),
-          // ),
         ],
       ),
     );
@@ -182,25 +179,34 @@ class _CourseDetailsState extends State<CourseDetails>
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              courseData["name"] ?? 'coursename',
+              courseData.name,
               style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w500,
                   color: AppColor.textColor),
             ),
-            BookmarkBox(
-              isBookmarked: courseData["is_favorited"],
-              onTap: () {
-                if (!courseData["is_favorited"]) {
-                  ScaffoldMessenger.of(context).clearSnackBars();
-                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      content: Text('Course added to favorites!')));
-                }
-                setState(() {
-                  courseData["is_favorited"] = !courseData["is_favorited"];
-                });
-              },
-            ),
+            BookmarkBox(course: courseData),
+            //  BookmarkBox was here
+            // IconButton(
+            //   icon: Icon(
+            //     courseData.isFavorited ? Icons.bookmark : Icons.bookmark_border,
+            //   ),
+            //   onPressed: () {
+            //     // setState(() {
+            //     //   courseData = Course(
+            //     //     id: courseData.id,
+            //     //     name: courseData.name,
+            //     //     image: courseData.image,
+            //     //     price: courseData.price,
+            //     //     duration: courseData.duration,
+            //     //     session: courseData.session,
+            //     //     review: courseData.review,
+            //     //     isFavorited: !courseData.isFavorited,
+            //     //     description: courseData.description,
+            //     //   );
+            //     // });
+            //   },
+            // ),
           ],
         ),
         const SizedBox(
@@ -209,21 +215,15 @@ class _CourseDetailsState extends State<CourseDetails>
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            getAttribute(Icons.play_circle_outline,
-                courseData["session"] ?? '12 lessons', AppColor.labelColor),
-            const SizedBox(
-              width: 20,
-            ),
-            getAttribute(Icons.schedule_outlined,
-                courseData["duration"] ?? '10 hours', AppColor.labelColor),
-            const SizedBox(
-              width: 20,
-            ),
+            getAttribute(Icons.play_circle_outline, courseData.session,
+                AppColor.labelColor),
+            const SizedBox(width: 20),
+            getAttribute(Icons.schedule_outlined, courseData.duration,
+                AppColor.labelColor),
+            const SizedBox(width: 20),
             getAttribute(
-                Icons.star, courseData["review"] ?? '5', AppColor.yellow),
-            const SizedBox(
-              height: 20,
-            ),
+                Icons.star, courseData.review.toString(), AppColor.yellow),
+            const SizedBox(height: 20),
           ],
         ),
         Column(
@@ -236,12 +236,9 @@ class _CourseDetailsState extends State<CourseDetails>
                   fontWeight: FontWeight.w500,
                   color: AppColor.textColor),
             ),
-            const SizedBox(
-              height: 10,
-            ),
+            const SizedBox(height: 10),
             ReadMoreText(
-              courseData["description"] ?? 'Description of the course',
-              // "sds",
+              courseData.description,
               trimLines: 2,
               trimMode: TrimMode.Line,
               style: const TextStyle(fontSize: 14, color: AppColor.labelColor),
@@ -251,12 +248,6 @@ class _CourseDetailsState extends State<CourseDetails>
                   color: AppColor.primary,
                   fontWeight: FontWeight.w500),
             ),
-            //     Text(
-            //   "detail...",
-            //   style: TextStyle(
-            //       fontSize: 14,
-            //       color: AppColor.labelColor),
-            // ),
           ],
         ),
       ],
@@ -266,18 +257,9 @@ class _CourseDetailsState extends State<CourseDetails>
   Widget getAttribute(IconData icon, String info, Color color) {
     return Row(
       children: [
-        Icon(
-          icon,
-          size: 20,
-          color: color,
-        ),
-        const SizedBox(
-          width: 5,
-        ),
-        Text(
-          info,
-          style: const TextStyle(color: AppColor.labelColor),
-        ),
+        Icon(icon, size: 20, color: color),
+        const SizedBox(width: 5),
+        Text(info, style: const TextStyle(color: AppColor.labelColor)),
       ],
     );
   }
@@ -306,17 +288,15 @@ class _CourseDetailsState extends State<CourseDetails>
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               const Text(
-                "price",
+                "Price",
                 style: TextStyle(
                     fontSize: 13,
                     color: AppColor.labelColor,
                     fontWeight: FontWeight.w500),
               ),
-              const SizedBox(
-                height: 3,
-              ),
+              const SizedBox(height: 3),
               Text(
-                courseData["price"],
+                courseData.price,
                 style: const TextStyle(
                     fontSize: 18,
                     color: AppColor.textColor,
@@ -324,25 +304,15 @@ class _CourseDetailsState extends State<CourseDetails>
               ),
             ],
           ),
-          const SizedBox(
-            width: 30,
-          ),
+          const SizedBox(width: 30),
           Expanded(
             child: MaterialButton(
               color: const Color(0xFF1E232C),
               shape: RoundedRectangleBorder(
-                // side: const Border(
-                //   color: Color(0xFF1E232C),
-                // ),
                 borderRadius: BorderRadius.circular(8),
               ),
               onPressed: () {
-                // Navigator.push(
-                //     context,
-                //     MaterialPageRoute(
-                //         builder: (context) => HomeScreen(
-                //             // onTap: togglePage,
-                //             )));
+                // Add your buy now logic here
               },
               child: const Padding(
                 padding: EdgeInsets.all(20),

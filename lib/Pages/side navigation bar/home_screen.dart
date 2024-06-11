@@ -17,6 +17,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:sidebarx/sidebarx.dart';
 
+import '../../models/course.dart';
+
 // import 'chat_page.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -253,15 +255,14 @@ class _HomeScreenState extends State<HomeScreen> {
       items: List.generate(
         features.length,
         (index) => FeatureItem(
-          // key: ValueKey(features[index].id), // Added
-          data: features[index],
-          onTap: () {
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: ((context) => CourseDetails(
-                      data: {"course": features[index]},
-                    ))));
-          },
-        ),
+            // key: ValueKey(features[index].id), // Added
+            data: features[index],
+            onTap: () {
+              Course courseD = Course.fromMap(features[index]);
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => CourseDetails(course: courseD),
+              ));
+            }),
       ),
     );
   }
