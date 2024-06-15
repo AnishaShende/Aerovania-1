@@ -6,18 +6,22 @@ import 'package:flutter_riverpod/flutter_riverpod.dart' as riverpod;
 import 'firebase_options.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 
+final authServicesProvider =
+    riverpod.Provider<AuthServices>((ref) => AuthServices());
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await FirebaseAppCheck.instance.activate();
+
   runApp(
     riverpod.ProviderScope(
       child: MyApp(),
-      overrides: [
-        riverpod.Provider<AuthServices>((ref) => AuthServices()),
-      ],
+      // overrides: [
+      //   riverpod.Provider<AuthServices>((ref) => AuthServices()),
+      // ],
     ),
   );
 }

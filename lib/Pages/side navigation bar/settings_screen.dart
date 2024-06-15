@@ -1,27 +1,24 @@
 import 'package:aerovania_app_1/Pages/home_page.dart';
 import 'package:aerovania_app_1/Pages/side%20navigation%20bar/edit_profile.dart';
 import 'package:aerovania_app_1/Pages/side%20navigation%20bar/welcome_screen.dart';
-import 'package:aerovania_app_1/services/auth/auth_services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sidebarx/sidebarx.dart';
 
-class SettingsScreen extends StatefulWidget {
+import '../../main.dart';
+
+class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
 
   @override
   _SettingsScreenState createState() => _SettingsScreenState();
 }
 
-class _SettingsScreenState extends State<SettingsScreen> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
+class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   final _controller = SidebarXController(selectedIndex: 4, extended: true);
   final _key = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -37,15 +34,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           elevation: 1,
-          // leading: IconButton(
-          //   onPressed: () {
-          //     Navigator.of(context).pop();
-          //   },
-          //   icon: const Icon(
-          //     Icons.arrow_back,
-          //     color: Colors.black,
-          //   ),
-          // ),
         ),
         body: Container(
           padding: const EdgeInsets.only(left: 16, top: 25, right: 16),
@@ -286,9 +274,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   void signOut() {
-    final authServices = Provider.of<AuthServices>(context, listen: false);
-    authServices.signOut();
-    Navigator.pushReplacement(context,
-        MaterialPageRoute(builder: (context) => const WelcomeScreen()));
+    final authServices = ref.read(authServicesProvider);
+    authServices.signOut().then((_) {
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => const WelcomeScreen()),
+        (Route<dynamic> route) => false,
+      );
+    });
   }
 }

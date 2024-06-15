@@ -14,12 +14,12 @@
 
 ## Backend things
 
-- [ ] Google authentication
+- [x] Google authentication
 - [x] Video Streaming
 - [ ] Adding equipment buying thing
 - [ ] Buy course
 - [ ] Notification management
-- [ ] Implementation of search functionality
+- [x] Implementation of search functionality
 - [x] Overall state management using Riverpod
 
 ## UI things

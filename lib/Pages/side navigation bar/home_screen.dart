@@ -1,5 +1,6 @@
 // import 'package:cloud_firestore/cloud_firestore.dart';
 // import 'package:firebase_auth/firebase_auth.dart';
+import 'package:aerovania_app_1/Pages/bottom%20navigation%20bar/search_page.dart';
 import 'package:aerovania_app_1/Pages/course_details.dart';
 import 'package:aerovania_app_1/Pages/home_page.dart';
 import 'package:aerovania_app_1/Pages/lists/all_categories.dart';
@@ -155,6 +156,28 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
         ),
+        GestureDetector(
+      onTap: (){
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => SearchScreen()),
+        );
+      },
+      child: Container(
+        padding: EdgeInsets.all(5),
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: AppColor.appBarColor,
+          border: Border.all(
+            color: Colors.grey.withOpacity(.3),
+          ),
+        ),
+        child: Icon(Icons.search,
+      // width: 20,
+      // height: 20,
+    ),
+      ),
+    ),
         NotificationBox(
           notifiedNumber: 1,
         )
