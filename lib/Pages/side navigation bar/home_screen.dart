@@ -178,6 +178,7 @@ class _HomeScreenState extends State<HomeScreen> {
     ),
       ),
     ),
+    SizedBox(width: 15,),
         NotificationBox(
           notifiedNumber: 1,
         )

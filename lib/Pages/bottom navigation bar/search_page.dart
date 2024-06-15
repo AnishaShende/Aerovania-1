@@ -41,12 +41,12 @@ class SearchScreen extends ConsumerWidget {
                 backgroundColor: const Color(0xffbfe0f8),
                 pinned: true,
                 title: getAppBar(),
-                leading: IconButton(
-                  onPressed: () {
-                    Scaffold.of(context).openDrawer();
-                  },
-                  icon: const Icon(Icons.menu, color: Colors.black),
-                ),
+                // leading: IconButton(
+                //   onPressed: () {
+                //     Scaffold.of(context).openDrawer();
+                //   },
+                //   icon: const Icon(Icons.menu, color: Colors.black),
+                // ),
               ),
               SliverToBoxAdapter(
                 child: getSearchBox(context, ref),

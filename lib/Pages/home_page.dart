@@ -1,4 +1,5 @@
-import 'package:aerovania_app_1/Pages/bottom%20navigation%20bar/search_page.dart';
+// import 'package:aerovania_app_1/Pages/bottom%20navigation%20bar/search_page.dart';
+import 'package:aerovania_app_1/Pages/bottom%20navigation%20bar/product_list.dart';
 import 'package:aerovania_app_1/Pages/side%20navigation%20bar/product_screen.dart';
 import 'package:aerovania_app_1/Pages/side%20navigation%20bar/settings_screen.dart';
 // import 'package:aerovania_app_1/utils/data.dart';
@@ -28,7 +29,8 @@ class HomePage extends StatefulWidget {
 
 final List<Widget> _bottomnavpages = [
   const HomeScreen(),
-  const SearchScreen(),
+  // const SearchScreen(),
+  ProductList(),
   const CartScreen(),
   const FavoriteScreen()
 ];

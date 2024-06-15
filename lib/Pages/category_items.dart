@@ -41,8 +41,8 @@ class CategoryItems extends StatelessWidget {
           ),
           child: Row(
             children: [
-              Image(
-                image: NetworkImage(data["icon"]),
+              Image.asset(
+                data["icon"],
                 height: MediaQuery.of(context).size.height * .02,
                 width: MediaQuery.of(context).size.width * .02,
                 color: isActive ? Colors.white : AppColor.darker,

@@ -55,8 +55,8 @@ class _AllCategoriesState extends State<AllCategories> {
               child: ListTile(
                 minTileHeight: MediaQuery.of(context).size.height * .15,
                 minLeadingWidth: MediaQuery.of(context).size.width * .15,
-                leading: Image(
-                  image: AssetImage(categories[index + 1]["icon"]),
+                leading: Image.asset(
+                  categories[index + 1]["icon"],
                   height: MediaQuery.of(context).size.height * .1,
                   width: MediaQuery.of(context).size.width * .1,
                   color: selectedCategoryIndex == index
