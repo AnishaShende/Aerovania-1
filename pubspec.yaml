@@ -60,6 +60,8 @@ dependencies:
   flutter_riverpod: ^2.5.1
   firebase_app_check: ^0.2.2+7
   google_sign_in: ^6.2.1
+  firebase_messaging: ^14.9.4
+  flutter_local_notifications: ^17.1.2
 
 dev_dependencies:
   flutter_test:

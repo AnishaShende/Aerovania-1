@@ -59,9 +59,9 @@ class _AllCategoriesState extends State<AllCategories> {
                   categories[index + 1]["icon"],
                   height: MediaQuery.of(context).size.height * .1,
                   width: MediaQuery.of(context).size.width * .1,
-                  color: selectedCategoryIndex == index
-                      ? Colors.white
-                      : Colors.black,
+                  // color: selectedCategoryIndex == index
+                  //     ? Colors.white
+                  //     : Colors.black,
                 ),
                 title: Text(categories[index + 1]["name"],
                     style: const TextStyle(fontSize: 20)),
