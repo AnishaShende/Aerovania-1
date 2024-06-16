@@ -1,14 +1,15 @@
-import 'package:aerovania_app_1/components/bookmark_box.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:readmore/readmore.dart';
-// import 'package:aerovania_app_1/components/bookmark_box.dart';
-import 'package:aerovania_app_1/components/lesson_items.dart';
-import 'package:aerovania_app_1/components/color.dart';
-import 'package:aerovania_app_1/services/video/video_player.dart';
-import 'package:aerovania_app_1/widgets/custom_image.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:url_launcher/url_launcher.dart'; // No longer needed
+
+import '../components/bookmark_box.dart';
+import '../components/color.dart';
+import '../components/lesson_items.dart';
 import '../models/course.dart';
-// import '../data/dummy_data.dart';
+import '../services/pdf/pdf_screen.dart';
+import '../services/video/video_player.dart';
+import '../widgets/custom_image.dart';
 
 class CourseDetails extends StatefulWidget {
   const CourseDetails({super.key, required this.course});
@@ -22,6 +23,17 @@ class _CourseDetailsState extends State<CourseDetails>
     with SingleTickerProviderStateMixin {
   late TabController tabController;
   late Course courseData;
+  final CollectionReference assignmentsCollection = FirebaseFirestore.instance
+      .collection('course_1')
+      .doc('course_documents')
+      .collection('assignments');
+
+  Future<List<Map<String, dynamic>>> fetchAssignments() async {
+    QuerySnapshot querySnapshot = await assignmentsCollection.get();
+    return querySnapshot.docs
+        .map((doc) => doc.data() as Map<String, dynamic>)
+        .toList();
+  }
 
   @override
   void initState() {
@@ -83,7 +95,11 @@ class _CourseDetailsState extends State<CourseDetails>
 
   Widget getLessons() {
     return StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance.collection('course_1').snapshots(),
+        stream: FirebaseFirestore.instance
+            .collection('course_1')
+            .doc('course_documents')
+            .collection('videos')
+            .snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return Center(child: CircularProgressIndicator());
@@ -96,10 +112,12 @@ class _CourseDetailsState extends State<CourseDetails>
             var aName = a['name'].split('.')[0];
             var bName = b['name'].split('.')[0];
             return aName.compareTo(bName);
-            // re786y`6  ee655t  ` ET655TF565E66TY6EUJT  R67YU7UY6JUJT5E466R56           67uj656ty7u6eujt  r67yu7uy6jujt5e466r56
           });
-          getVideoName(String name) {
-            name.replaceAll(RegExp('mp4'), '');
+
+          String getVideoName(String name) {
+            // Ensure there's a dot to split on to avoid errors
+            if (!name.contains('.')) return name.toUpperCase();
+            name = name.replaceAll(RegExp(r'\.mp4$'), '');
             return name.split('.')[1].toUpperCase();
           }
 
@@ -111,8 +129,6 @@ class _CourseDetailsState extends State<CourseDetails>
                 var videoName = video['name'];
                 return GestureDetector(
                   onTap: () {
-                    print("lesson tapped!");
-                    // FileStorageService().fetchAndStoreMetadata('course_1/videos');
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -124,8 +140,6 @@ class _CourseDetailsState extends State<CourseDetails>
                     );
                   },
                   child: LessonItems(
-                    // Image.asset('assets/appicon.png'),
-                    // data: lessons[index],
                     name: getVideoName(videoName),
                     thumbnail: 'assets/images/applogo.png',
                     duration: '55 min',
@@ -133,6 +147,65 @@ class _CourseDetailsState extends State<CourseDetails>
                 );
               });
         });
+  }
+
+  Widget showAssignments() {
+    return FutureBuilder<List<Map<String, dynamic>>>(
+      future: fetchAssignments(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return Center(child: Text('No assignments found.'));
+        } else {
+          var assignments = snapshot.data!;
+
+          // Sort the assignments by name
+          assignments.sort((a, b) {
+            var aName = a['name'].split('.')[0].toUpperCase();
+            var bName = b['name'].split('.')[0].toUpperCase();
+            aName = aName.split(' ').last;
+            bName = bName.split(' ').last;
+            // print('sdsd $aName $bName');
+            return aName.compareTo(bName);
+          });
+
+          return getAssignments(assignments);
+        }
+      },
+    );
+  }
+
+  Widget getAssignments(List<Map<String, dynamic>> assignments) {
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: AlwaysScrollableScrollPhysics(),
+      itemCount: assignments.length,
+      itemBuilder: (context, index) {
+        final assignment = assignments[index];
+
+        String getAssignmentName(String name) {
+          // Ensure there's a dot to split on to avoid errors
+          if (!name.contains('.')) return name.toUpperCase();
+          name = name.replaceAll(RegExp(r'\.pdf$'), '');
+          return name.split('.')[0].toUpperCase();
+        }
+
+        return ListTile(
+          title: Text(getAssignmentName(assignment['name'])),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => PdfScreen(pdfPath: assignment['name']),
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 
   Widget getTabBar() {
@@ -148,7 +221,7 @@ class _CourseDetailsState extends State<CourseDetails>
         ),
         Tab(
           child: Text(
-            "Exercises",
+            "Assignments",
             style: TextStyle(fontSize: 14, color: AppColor.textColor),
           ),
         ),
@@ -165,7 +238,7 @@ class _CourseDetailsState extends State<CourseDetails>
         controller: tabController,
         children: [
           getLessons(),
-          const Text("Exercises"),
+          showAssignments(),
         ],
       ),
     );
@@ -186,27 +259,6 @@ class _CourseDetailsState extends State<CourseDetails>
                   color: AppColor.textColor),
             ),
             BookmarkBox(course: courseData),
-            //  BookmarkBox was here
-            // IconButton(
-            //   icon: Icon(
-            //     courseData.isFavorited ? Icons.bookmark : Icons.bookmark_border,
-            //   ),
-            //   onPressed: () {
-            //     // setState(() {
-            //     //   courseData = Course(
-            //     //     id: courseData.id,
-            //     //     name: courseData.name,
-            //     //     image: courseData.image,
-            //     //     price: courseData.price,
-            //     //     duration: courseData.duration,
-            //     //     session: courseData.session,
-            //     //     review: courseData.review,
-            //     //     isFavorited: !courseData.isFavorited,
-            //     //     description: courseData.description,
-            //     //   );
-            //     // });
-            //   },
-            // ),
           ],
         ),
         const SizedBox(
@@ -242,7 +294,6 @@ class _CourseDetailsState extends State<CourseDetails>
               trimLines: 2,
               trimMode: TrimMode.Line,
               style: const TextStyle(fontSize: 14, color: AppColor.labelColor),
-              // trimCollapsedText: "show more",
               moreStyle: const TextStyle(
                   fontSize: 14,
                   color: AppColor.primary,

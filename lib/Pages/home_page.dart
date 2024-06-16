@@ -89,9 +89,9 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: Colors.transparent,
         index: selectedIndex,
         items: const <Widget>[
-          Icon(Icons.add, size: 30),
-          Icon(Icons.search, size: 30),
+          Icon(Icons.home_filled, size: 30),
           Icon(Icons.shopping_cart, size: 30),
+          Icon(Icons.video_collection_rounded, size: 30),
           Icon(Icons.favorite, size: 30),
         ],
         onTap: (int index) {

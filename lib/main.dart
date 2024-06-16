@@ -14,6 +14,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  // comment this while using storage_services
   await FirebaseAppCheck.instance.activate();
 
   runApp(

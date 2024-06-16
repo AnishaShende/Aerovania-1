@@ -157,28 +157,31 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         GestureDetector(
-      onTap: (){
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => SearchScreen()),
-        );
-      },
-      child: Container(
-        padding: EdgeInsets.all(5),
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: AppColor.appBarColor,
-          border: Border.all(
-            color: Colors.grey.withOpacity(.3),
+          onTap: () async {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => SearchScreen()),
+            );
+          },
+          child: Container(
+            padding: EdgeInsets.all(5),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: AppColor.appBarColor,
+              border: Border.all(
+                color: Colors.grey.withOpacity(.3),
+              ),
+            ),
+            child: Icon(
+              Icons.search,
+              // width: 20,
+              // height: 20,
+            ),
           ),
         ),
-        child: Icon(Icons.search,
-      // width: 20,
-      // height: 20,
-    ),
-      ),
-    ),
-    SizedBox(width: 15,),
+        SizedBox(
+          width: 15,
+        ),
         NotificationBox(
           notifiedNumber: 1,
         )
