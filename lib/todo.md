@@ -11,6 +11,10 @@
 - [x] Webview for contact us page for android
 - [ ] Enhance Setting Screen
 - [x] Enhance Contact Us screen
+- [ ] Firebase storage of user data for google signin
+- [ ] store courses data in firebase
+- [ ] store bookmark data in datastore 
+- [ ] course updates and purchase data in datastore
 
 ## Backend things
 
@@ -25,7 +29,7 @@
 ## UI things
 
 - [x] Form validation (login / signup)
-- [ ] button clicks animation
+- [x] button clicks animation
 - [ ] fix bottom overflows
 - [x] loading indicator in register screen
 - [x] fix forget password screen
@@ -43,4 +47,4 @@
 - [ ] Products Screen
 - [ ] History Screen
 - [ ] Media Screen
-- [ ] About Screen
+- [x] About Screen

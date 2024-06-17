@@ -30,12 +30,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               width: MediaQuery.of(context).size.width,
               // fit: BoxFit.cover,
             ),
-            // Image.asset(
-            //   "assets/images/applogo.png",
-            //   height: MediaQuery.of(context).size.height * 0.2,
-            //   width: MediaQuery.of(context).size.width * 0.3,
-            //   fit: BoxFit.cover,
-            // ),
             const SizedBox(height: 25),
             //login button
             Padding(

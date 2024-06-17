@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:readmore/readmore.dart';
-// import 'package:url_launcher/url_launcher.dart'; // No longer needed
 
 import '../components/bookmark_box.dart';
 import '../components/color.dart';
@@ -19,10 +18,10 @@ class CourseDetails extends StatefulWidget {
   State<CourseDetails> createState() => _CourseDetailsState();
 }
 
-class _CourseDetailsState extends State<CourseDetails>
-    with SingleTickerProviderStateMixin {
+class _CourseDetailsState extends State<CourseDetails> with SingleTickerProviderStateMixin {
   late TabController tabController;
   late Course courseData;
+  bool isPurchased = false;
   final CollectionReference assignmentsCollection = FirebaseFirestore.instance
       .collection('course_1')
       .doc('course_documents')
@@ -115,7 +114,6 @@ class _CourseDetailsState extends State<CourseDetails>
           });
 
           String getVideoName(String name) {
-            // Ensure there's a dot to split on to avoid errors
             if (!name.contains('.')) return name.toUpperCase();
             name = name.replaceAll(RegExp(r'\.mp4$'), '');
             return name.split('.')[1].toUpperCase();
@@ -127,6 +125,12 @@ class _CourseDetailsState extends State<CourseDetails>
                 var video = videos[index];
                 var videoUrl = video['url'];
                 var videoName = video['name'];
+                if (!isPurchased) {
+                  return ListTile(
+                    leading: Icon(Icons.lock, color: Colors.grey),
+                    title: Text(getVideoName(videoName)),
+                  );
+                }
                 return GestureDetector(
                   onTap: () {
                     Navigator.push(
@@ -162,13 +166,11 @@ class _CourseDetailsState extends State<CourseDetails>
         } else {
           var assignments = snapshot.data!;
 
-          // Sort the assignments by name
           assignments.sort((a, b) {
             var aName = a['name'].split('.')[0].toUpperCase();
             var bName = b['name'].split('.')[0].toUpperCase();
             aName = aName.split(' ').last;
             bName = bName.split(' ').last;
-            // print('sdsd $aName $bName');
             return aName.compareTo(bName);
           });
 
@@ -187,10 +189,16 @@ class _CourseDetailsState extends State<CourseDetails>
         final assignment = assignments[index];
 
         String getAssignmentName(String name) {
-          // Ensure there's a dot to split on to avoid errors
           if (!name.contains('.')) return name.toUpperCase();
           name = name.replaceAll(RegExp(r'\.pdf$'), '');
           return name.split('.')[0].toUpperCase();
+        }
+
+        if (!isPurchased) {
+          return ListTile(
+            leading: Icon(Icons.lock, color: Colors.grey),
+            title: Text(getAssignmentName(assignment['name'])),
+          );
         }
 
         return ListTile(
@@ -363,7 +371,9 @@ class _CourseDetailsState extends State<CourseDetails>
                 borderRadius: BorderRadius.circular(8),
               ),
               onPressed: () {
-                // Add your buy now logic here
+                setState(() {
+                  isPurchased = true;
+                });
               },
               child: const Padding(
                 padding: EdgeInsets.all(20),

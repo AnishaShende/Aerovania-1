@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sidebarx/sidebarx.dart';
 
 import '../../main.dart';
+import '../create_password_screen.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
@@ -97,10 +98,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   ),
                 ),
               ),
-              buildAccountOptionRow(context, "Change password"),
-              buildAccountOptionRow(context, "Content settings"),
-              buildAccountOptionRow(context, "Social"),
-              buildAccountOptionRow(context, "Privacy and security"),
+              changePasswordRow(context, "Change password"),
+              // buildAccountOptionRow(context, "Content settings"),
+              // buildAccountOptionRow(context, "Social"),
+              // buildAccountOptionRow(context, "Privacy and security"),
               const SizedBox(
                 height: 40,
               ),
@@ -224,32 +225,37 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     );
   }
 
-  GestureDetector buildAccountOptionRow(BuildContext context, String title) {
+  GestureDetector changePasswordRow(BuildContext context, String title) {
     return GestureDetector(
       onTap: () {
-        showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: Text(title),
-                content: const Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text("Option 1"),
-                    Text("Option 2"),
-                    Text("Option 3"),
-                  ],
-                ),
-                actions: [
-                  TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: const Text("Close")),
-                ],
-              );
-            });
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => const CreatePasswordScreen()));
       },
+      //   showDialog(
+      //       context: context,
+      //       builder: (BuildContext context) {
+      //         return AlertDialog(
+      //           title: Text(title),
+      //           content: const Column(
+      //             mainAxisSize: MainAxisSize.min,
+      //             children: [
+      //               Text("Option 1"),
+      //               Text("Option 2"),
+      //               Text("Option 3"),
+      //             ],
+      //           ),
+      //           actions: [
+      //             TextButton(
+      //                 onPressed: () {
+      //                   Navigator.of(context).pop();
+      //                 },
+      //                 child: const Text("Close")),
+      //           ],
+      //         );
+      //       });
+      // },
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
         child: Row(

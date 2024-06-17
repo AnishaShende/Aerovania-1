@@ -1,9 +1,12 @@
 import 'package:aerovania_app_1/services/auth/auth_gate.dart';
+import 'package:aerovania_app_1/services/auth/auth_services.dart';
 import 'package:flutter/material.dart';
 // import 'package:login_signup_flow_app/screens/login_screen.dart';
 
 class PasswordCreatedScreen extends StatelessWidget {
-  const PasswordCreatedScreen({Key? key}) : super(key: key);
+  PasswordCreatedScreen({Key? key, required this.isLogged}) : super(key: key);
+
+  final bool isLogged;
 
   @override
   Widget build(BuildContext context) {
@@ -36,12 +39,12 @@ class PasswordCreatedScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                const Padding(
+                Padding(
                   padding: EdgeInsets.symmetric(
                     horizontal: 20,
                     vertical: 10,
                   ),
-                  child: Text(
+                  child: Text( isLogged ? "Password changed successfully." :
                     "Password reset link has been sent to your email address.",
                     style: TextStyle(
                       color: Color(0xFF8391A1),
@@ -67,7 +70,7 @@ class PasswordCreatedScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(8),
                           ),
                           onPressed: () {
-                            
+                            AuthServices().signOut();
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(

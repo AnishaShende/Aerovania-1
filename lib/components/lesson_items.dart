@@ -28,9 +28,9 @@ class LessonItems extends StatelessWidget {
       ),
       child: Row(
         children: [
-          CustomImage(
+          Image.asset(
             thumbnail ?? '',
-            radius: 10,
+            // radius: 10,
             width: 70,
             height: 70,
           ),

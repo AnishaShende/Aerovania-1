@@ -140,7 +140,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                              const PasswordCreatedScreen())));
+                                              PasswordCreatedScreen(isLogged: false))));
                               setState(() {
                                 isloading = false;
                               });
