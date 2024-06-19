@@ -285,27 +285,61 @@ class _HomeScreenState extends State<HomeScreen> {
         }
 
         List<DocumentSnapshot> features = snapshot.data!.docs;
+        List<String> courseIds = features
+            .map((doc) =>
+                (doc.data() as Map<String, dynamic>)['CourseId'] as String)
+            .toList();
 
-        return CarouselSlider(
-          options: CarouselOptions(
-            height: 290,
-            enlargeCenterPage: true,
-            disableCenter: true,
-            viewportFraction: .75,
-          ),
-          items: List.generate(
-            features.length,
-            (index) => FeatureItem(
-              data: features[index].data() as Map<String, dynamic>,
-              onTap: () {
-                Course courseD = Course.fromMap(
-                    features[index].data() as Map<String, dynamic>);
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => CourseDetails(course: courseD),
-                ));
-              },
-            ),
-          ),
+        return FutureBuilder<List<DocumentSnapshot>>(
+          future: Future.wait(courseIds.map((courseId) {
+            return FirebaseFirestore.instance
+                .collection('courses')
+                .doc(courseId)
+                .get();
+          }).toList()),
+          builder: (context, courseSnapshot) {
+            if (courseSnapshot.hasError) {
+              return Text('Error: ${courseSnapshot.error}');
+            }
+
+            if (courseSnapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            }
+
+            List<DocumentSnapshot> courseDocs = courseSnapshot.data!;
+            List<Map<String, dynamic>> courseData = courseDocs
+                .where((doc) => doc.exists)
+                .map((doc) => doc.data() as Map<String, dynamic>)
+                .toList();
+
+            return CarouselSlider(
+              options: CarouselOptions(
+                height: 290,
+                enlargeCenterPage: true,
+                disableCenter: true,
+                viewportFraction: .75,
+              ),
+              items: List.generate(
+                courseData.length,
+                (index) => FeatureItem(
+                  data: courseData[index],
+                  onTap: () async {
+                    var course = courseData[index];
+                    if (course != null) {
+                      Course courseD = Course.fromMap(course);
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => CourseDetails(course: courseD),
+                      ));
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Course not found')),
+                      );
+                    }
+                  },
+                ),
+              ),
+            );
+          },
         );
       },
     );
@@ -313,40 +347,76 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildRecommended() {
     return StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance.collection('recommends').snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          }
+      stream: FirebaseFirestore.instance.collection('recommends').snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        }
 
-          if (!snapshot.hasData || snapshot.hasError) {
-            return Text('Error fetching recommended items');
-          }
+        if (!snapshot.hasData || snapshot.hasError) {
+          return Text('Error fetching recommended items');
+        }
 
-          List<DocumentSnapshot> recommends = snapshot.data!.docs;
+        // Assuming 'recommends' collection documents have a field 'CourseId'
+        List<String> courseIds = snapshot.data!.docs
+            .map((doc) =>
+                (doc.data() as Map<String, dynamic>)['CourseId'] as String)
+            .toList();
 
-          return SingleChildScrollView(
-            padding: const EdgeInsets.fromLTRB(15, 5, 0, 5),
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: List.generate(
-                recommends.length,
-                (index) => Padding(
-                  padding: const EdgeInsets.only(right: 10),
-                  child: RecommendItem(
-                    data: recommends[index].data() as Map<String, dynamic>,
-                    onTap: () {
-                      Course courseD = Course.fromMap(
-                          recommends[index].data() as Map<String, dynamic>);
-                      Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => CourseDetails(course: courseD),
-                      ));
-                    },
+        return FutureBuilder<List<DocumentSnapshot>>(
+          future: Future.wait(courseIds.map((courseId) {
+            return FirebaseFirestore.instance
+                .collection('courses')
+                .doc(courseId)
+                .get();
+          }).toList()),
+          builder: (context, courseSnapshot) {
+            if (courseSnapshot.hasError) {
+              return Text('Error: ${courseSnapshot.error}');
+            }
+
+            if (courseSnapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            }
+
+            List<DocumentSnapshot> courseDocs = courseSnapshot.data!;
+            List<Map<String, dynamic>> courseData = courseDocs
+                .where((doc) => doc.exists)
+                .map((doc) => doc.data() as Map<String, dynamic>)
+                .toList();
+
+            return SingleChildScrollView(
+              padding: const EdgeInsets.fromLTRB(15, 5, 0, 5),
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: List.generate(
+                  courseData.length,
+                  (index) => Padding(
+                    padding: const EdgeInsets.only(right: 10),
+                    child: RecommendItem(
+                      data: courseData[index],
+                      onTap: () async {
+                        var course = courseData[index];
+                        if (course != null) {
+                          Course courseD = Course.fromMap(course);
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) =>
+                                CourseDetails(course: courseD),
+                          ));
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Course not found')),
+                          );
+                        }
+                      },
+                    ),
                   ),
                 ),
               ),
-            ),
-          );
-        });
+            );
+          },
+        );
+      },
+    );
   }
 }

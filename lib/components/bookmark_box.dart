@@ -14,9 +14,11 @@ class BookmarkBox extends ConsumerStatefulWidget {
 class _BookmarkBoxState extends ConsumerState<BookmarkBox> {
   @override
   Widget build(BuildContext context) {
+    final favorites = ref.watch(favoriteProvider);
+    final isFavorited = favorites.contains(widget.course);
     return IconButton(
       icon: Icon(
-        widget.course.isFavorited ? Icons.bookmark : Icons.bookmark_border,
+        isFavorited ? Icons.bookmark : Icons.bookmark_border,
       ),
       onPressed: () {
         final wasAdded =

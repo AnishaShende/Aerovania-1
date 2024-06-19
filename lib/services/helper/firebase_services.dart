@@ -77,4 +77,36 @@ class FirebaseService {
       return courses;
     });
   }
+
+  Future<void> uploadFavoriteCourses(
+      String userId, List<String> courseIds) async {
+    try {
+      await _db.collection('users').doc(userId).update({
+        'favoriteCourses': FieldValue.arrayUnion(courseIds),
+      });
+    } catch (e) {
+      print('Error uploading favorite courses: $e');
+      throw Exception('Failed to upload favorite courses');
+    }
+  }
+
+  Stream<List<Course>> getFavoriteCoursesStream() {
+    String userId = FirebaseAuth.instance.currentUser!.uid;
+    return _db
+        .collection('users')
+        .doc(userId)
+        .snapshots()
+        .asyncMap((userDoc) async {
+      List<dynamic> courseIds = userDoc.data()?['favoriteCourses'] ?? [];
+      List<Course> courses = [];
+      for (String courseId in courseIds) {
+        DocumentSnapshot courseDoc =
+            await _db.collection('courses').doc(courseId).get();
+        if (courseDoc.exists) {
+          courses.add(Course.fromMap(courseDoc.data() as Map<String, dynamic>));
+        }
+      }
+      return courses;
+    });
+  }
 }

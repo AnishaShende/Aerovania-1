@@ -20,12 +20,12 @@ final lessonsFilterProvider = StateProvider<bool>((ref) => false);
 final priceFilterProvider = StateProvider<bool>((ref) => false);
 
 class SearchScreen extends ConsumerWidget {
-  const SearchScreen({Key? key}) : super(key: key);
+  SearchScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final scrollController = ScrollController();
     final _key = GlobalKey<ScaffoldState>();
+    final scrollController = ScrollController();
 
     return SafeArea(
       child: Scaffold(
@@ -45,9 +45,11 @@ class SearchScreen extends ConsumerWidget {
               SliverToBoxAdapter(
                 child: getSearchBox(context, ref),
               ),
-              SliverToBoxAdapter(
-                child: getCategories(context),
-              ),
+
+              // SliverToBoxAdapter(
+              //   child: 
+              //   // getCategories(context),
+              // ),
               searchFunc(context, ref),
             ],
           ),
@@ -78,11 +80,8 @@ class SearchScreen extends ConsumerWidget {
         children: [
           Expanded(
             child: Container(
-              height: MediaQuery.of(context).size.height * .05,
-              width: MediaQuery.of(context).size.width * .65,
-              padding: const EdgeInsets.only(
-                bottom: 3,
-              ),
+              height: 50,
+              padding: const EdgeInsets.only(bottom: 3),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(10),
@@ -108,19 +107,18 @@ class SearchScreen extends ConsumerWidget {
                     fontSize: 15,
                   ),
                 ),
+                autofocus: true,
               ),
             ),
           ),
-          const SizedBox(
-            width: 10,
-          ),
+          const SizedBox(width: 10),
           InkWell(
             onTap: () {
               showFilterDialog(context, ref);
             },
             child: Container(
-              height: MediaQuery.of(context).size.height * .05,
-              width: MediaQuery.of(context).size.width * .1,
+              height: 50,
+              width: 50,
               padding: const EdgeInsets.all(5),
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -131,7 +129,7 @@ class SearchScreen extends ConsumerWidget {
                 color: Colors.black54,
               ),
             ),
-          )
+          ),
         ],
       ),
     );
@@ -160,7 +158,10 @@ class SearchScreen extends ConsumerWidget {
                           .map<DropdownMenuItem<String>>((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
-                          child: Text(value),
+                          child: Text(
+                            value,
+                            style: TextStyle(fontWeight: FontWeight.normal),
+                          ),
                         );
                       }).toList(),
                       onChanged: (String? newValue) {
@@ -169,7 +170,8 @@ class SearchScreen extends ConsumerWidget {
                         });
                       },
                     ),
-                    Divider(height: 20, thickness: 1),
+                    SizedBox(height: 10),
+                    // Divider(height: 20, thickness: 1),
                     Text('Sort by:'),
                     SizedBox(height: 10),
                     RadioListTile<SortBy>(
@@ -226,47 +228,44 @@ class SearchScreen extends ConsumerWidget {
   }
 }
 
-Widget getCategories(BuildContext context) {
-  return Container(
-    height: MediaQuery.of(context).size.height * .1,
-    width: MediaQuery.of(context).size.width * 1,
-    child: SingleChildScrollView(
-      padding: const EdgeInsets.only(left: 15, top: 10, bottom: 15),
-      scrollDirection: Axis.horizontal,
-      child: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance.collection('categories').snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator();
-          }
-          if (!snapshot.hasData || snapshot.hasError) {
-            return Text('Error fetching categories');
-          }
+// Widget getCategories(BuildContext context) {
+//   return Container(
+//     height: MediaQuery.of(context).size.height * 0.1,
+//     width: MediaQuery.of(context).size.width,
+//     child: SingleChildScrollView(
+//       padding: const EdgeInsets.only(left: 15, top: 10, bottom: 15),
+//       scrollDirection: Axis.horizontal,
+//       child: StreamBuilder<QuerySnapshot>(
+//         stream: FirebaseFirestore.instance.collection('categories').snapshots(),
+//         builder: (context, snapshot) {
+//           if (snapshot.connectionState == ConnectionState.waiting) {
+//             return CircularProgressIndicator();
+//           }
+//           if (!snapshot.hasData || snapshot.hasError) {
+//             return Text('Error fetching categories');
+//           }
 
-          // Convert snapshot data into a list of categories
-          List<DocumentSnapshot> categories = snapshot.data!.docs;
+//           // Convert snapshot data into a list of categories
+//           List<DocumentSnapshot> categories = snapshot.data!.docs;
 
-          return Row(
-            children: List.generate(
-              categories.length,
-              (index) {
-                final category =
-                    categories[index].data() as Map<String, dynamic>;
-                return CategoryItems(
-                  onTap: () {},
-                  data: category,
-                );
-              },
-            ).toList(),
-          );
-        },
-      ),
-    ),
-    // },
-  );
-  //   ),
-  // );
-}
+//           return Row(
+//             children: List.generate(
+//               categories.length,
+//               (index) {
+//                 final category =
+//                     categories[index].data() as Map<String, dynamic>;
+//                 return CategoryItems(
+//                   onTap: () {},
+//                   data: category,
+//                 );
+//               },
+//             ).toList(),
+//           );
+//         },
+//       ),
+//     ),
+//   );
+// }
 
 Widget searchFunc(BuildContext context, WidgetRef ref) {
   return FutureBuilder<QuerySnapshot>(
@@ -349,33 +348,34 @@ int compareCoursePrice(
     Map<String, dynamic> a, Map<String, dynamic> b, SortBy sortBy) {
   final courseA = Course.fromMap(a);
   final courseB = Course.fromMap(b);
-
-  return double.parse(courseA.price.substring(2))
+  final comparison = double.parse(courseA.price.substring(2))
       .compareTo(double.parse(courseB.price.substring(2)));
+  return sortBy == SortBy.lowToHigh ? comparison : -comparison;
 }
 
 int compareCourseReview(
     Map<String, dynamic> a, Map<String, dynamic> b, SortBy sortBy) {
   final courseA = Course.fromMap(a);
   final courseB = Course.fromMap(b);
-
-  return double.parse(courseB.review).compareTo(double.parse(courseA.review));
+  final comparison =
+      double.parse(courseB.review).compareTo(double.parse(courseA.review));
+  return sortBy == SortBy.lowToHigh ? -comparison : comparison;
 }
 
 int compareCourseDuration(
     Map<String, dynamic> a, Map<String, dynamic> b, SortBy sortBy) {
   final courseA = Course.fromMap(a);
   final courseB = Course.fromMap(b);
-
-  return int.parse(courseA.duration.split(' ')[0])
+  final comparison = int.parse(courseA.duration.split(' ')[0])
       .compareTo(int.parse(courseB.duration.split(' ')[0]));
+  return sortBy == SortBy.lowToHigh ? comparison : -comparison;
 }
 
 int compareCourseSession(
     Map<String, dynamic> a, Map<String, dynamic> b, SortBy sortBy) {
   final courseA = Course.fromMap(a);
   final courseB = Course.fromMap(b);
-
-  return int.parse(courseA.session.split(' ')[0])
+  final comparison = int.parse(courseA.session.split(' ')[0])
       .compareTo(int.parse(courseB.session.split(' ')[0]));
+  return sortBy == SortBy.lowToHigh ? comparison : -comparison;
 }

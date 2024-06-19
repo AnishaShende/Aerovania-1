@@ -1,10 +1,10 @@
-import 'package:aerovania_app_1/Pages/home_page.dart';
-import 'package:aerovania_app_1/components/color.dart';
 import 'package:flutter/material.dart';
-import 'package:aerovania_app_1/providers/favorite_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../course_details.dart';
 import '../course_items.dart';
+import '../../providers/favorite_provider.dart';
+import '../../components/color.dart';
+import '../../Pages/home_page.dart';
 
 class FavoriteScreen extends ConsumerStatefulWidget {
   const FavoriteScreen({Key? key}) : super(key: key);
@@ -70,9 +70,9 @@ class _FavoriteScreenState extends ConsumerState<FavoriteScreen> {
     );
   }
 
-  showFavorites() {
+  SliverChildBuilderDelegate showFavorites() {
     final favoriteCourses = ref.watch(favoriteProvider);
-    // Use favoriteCourses here
+
     if (favoriteCourses.isEmpty) {
       return SliverChildBuilderDelegate((context, index) {
         return Column(
@@ -122,12 +122,13 @@ class _FavoriteScreenState extends ConsumerState<FavoriteScreen> {
           return Padding(
             padding: const EdgeInsets.only(top: 5, left: 15, right: 15),
             child: CourseItem(
-                data: course,
-                onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => CourseDetails(course: course),
-                  ));
-                }),
+              data: course,
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => CourseDetails(course: course),
+                ));
+              },
+            ),
           );
         },
         childCount: favoriteCourses.length,

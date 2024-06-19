@@ -95,7 +95,7 @@ class _AllCategoriesState extends State<AllCategories> {
                     child: ListTile(
                       minVerticalPadding:
                           MediaQuery.of(context).size.height * .05,
-                      leading: Image.network(
+                      leading: Image.asset(
                         category["icon"],
                         height: MediaQuery.of(context).size.height * .1,
                         width: MediaQuery.of(context).size.width * .1,

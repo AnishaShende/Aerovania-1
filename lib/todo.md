@@ -13,7 +13,7 @@
 - [x] Enhance Contact Us screen
 - [x] Firebase storage of user data for google signin
 - [x] store courses data in firebase
-- [ ] store bookmark data in datastore
+- [x] store bookmark data in datastore
 - [x] course updates and purchase data in datastore
 
 ## Backend things

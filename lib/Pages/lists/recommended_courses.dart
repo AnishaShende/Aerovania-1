@@ -33,7 +33,7 @@ class _RecommendedCoursesState extends State<RecommendedCourses> {
 
     // Fetch each recommended course
     for (var doc in recommendSnapshot.docs) {
-      String courseId = doc['courseId'];
+      String courseId = doc['CourseId'];
       DocumentSnapshot courseSnapshot = await FirebaseFirestore.instance
           .collection('courses')
           .doc(courseId)
