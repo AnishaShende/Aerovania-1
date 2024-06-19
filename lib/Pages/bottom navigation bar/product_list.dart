@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../components/color.dart';
 import '../../components/product_card.dart';
@@ -43,9 +42,11 @@ class _ProductListState extends State<ProductList> {
               ),
             ),
             StreamBuilder<QuerySnapshot>(
-              stream: FirebaseFirestore.instance.collection('products').snapshots(),
+              stream:
+                  FirebaseFirestore.instance.collection('products').snapshots(),
               builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                if (!snapshot.hasData) {
+                if (!snapshot.hasData ||
+                    snapshot.connectionState == ConnectionState.waiting) {
                   return SliverToBoxAdapter(
                       child: Center(child: CircularProgressIndicator()));
                 }

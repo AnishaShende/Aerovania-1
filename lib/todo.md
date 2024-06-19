@@ -9,18 +9,18 @@
 - [x] New side nav bar
 - [x] Side nav bar should be available for bottom nav bar screens
 - [x] Webview for contact us page for android
-- [ ] Enhance Setting Screen
+- [x] Enhance Setting Screen
 - [x] Enhance Contact Us screen
-- [ ] Firebase storage of user data for google signin
-- [ ] store courses data in firebase
-- [ ] store bookmark data in datastore 
-- [ ] course updates and purchase data in datastore
+- [x] Firebase storage of user data for google signin
+- [x] store courses data in firebase
+- [ ] store bookmark data in datastore
+- [x] course updates and purchase data in datastore
 
 ## Backend things
 
 - [x] Google authentication
 - [x] Video Streaming
-- [ ] Adding equipment buying thing
+- [x] Adding equipment buying thing
 - [ ] Buy course
 - [ ] Notification management
 - [x] Implementation of search functionality
@@ -30,7 +30,7 @@
 
 - [x] Form validation (login / signup)
 - [x] button clicks animation
-- [ ] fix bottom overflows
+- [x] fix bottom overflows
 - [x] loading indicator in register screen
 - [x] fix forget password screen
 - [x] ratings are hiding in featured courses
@@ -40,11 +40,11 @@
 
 ## Screen to create
 
-- [ ] Favorite screen
+- [x] Favorite screen
 - [ ] Cart Screen
-- [ ] Explore Screen
-- [ ] Course Screen
-- [ ] Products Screen
+- [x] Explore Screen
+- [x] Course Screen
+- [x] Products Screen
 - [ ] History Screen
 - [ ] Media Screen
 - [x] About Screen

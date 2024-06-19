@@ -34,15 +34,6 @@ class _ProductScreenState extends State<ProductScreen> {
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           // backgroundColor: const Color(0xffbfe0f8),
           elevation: 1,
-          // leading: IconButton(
-          //   onPressed: () {
-          //     Navigator.of(context).pop();
-          //   },
-          //   icon: const Icon(
-          //     Icons.arrow_back,
-          //     color: Colors.black,
-          //   ),
-          // ),
         ),
       ),
     );

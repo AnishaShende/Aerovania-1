@@ -61,7 +61,56 @@ class FileStorageService {
       print('Error: $e');
     }
   }
+
+  uploadCategories() async {
+    // FirebaseFirestore firestore = FirebaseFirestore.instance;
+// Your categories data
+    List<Map<String, String>> categories = [
+      {"name": "All", "icon": "assets/icons/category/all.jpg"},
+      {"name": "Coding", "icon": "assets/icons/category/coding.jpg"},
+      {"name": "Education", "icon": "assets/icons/category/education.jpg"},
+      {"name": "Design", "icon": "assets/icons/category/design.jpg"},
+      {"name": "Business", "icon": "assets/icons/category/business.jpg"},
+      {"name": "Finance", "icon": "assets/icons/category/finance.jpg"},
+    ];
+
+    // Initialize the categories collection
+    CollectionReference categoriesCollection =
+        _firestore.collection('categories');
+    Map<String, String> categoryDocs = {};
+
+    // Add the categories to the collection
+    for (Map<String, String> category in categories) {
+      DocumentReference docRef = await categoriesCollection.add(category);
+      categoryDocs[category['name']!] = docRef.id;
+    }
+
+    // Fetch all courses
+    QuerySnapshot coursesSnapshot =
+        await _firestore.collection('courses').get();
+
+    // Update categories with course IDs
+    for (QueryDocumentSnapshot courseDoc in coursesSnapshot.docs) {
+      String courseId = courseDoc.id;
+      List<dynamic> courseCategories = courseDoc['category'];
+
+      for (String categoryName in courseCategories) {
+        if (categoryDocs.containsKey(categoryName)) {
+          String categoryId = categoryDocs[categoryName]!;
+          DocumentReference categoryRef = categoriesCollection.doc(categoryId);
+
+          await categoryRef.update({
+            'courses': FieldValue.arrayUnion([courseId])
+          });
+        }
+      }
+    }
+    print('Categories updated with course IDs successfully');
+  }
 }
+
+
+
 
 // function logic
 

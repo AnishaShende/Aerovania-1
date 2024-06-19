@@ -1,5 +1,4 @@
 import 'package:aerovania_app_1/components/color.dart';
-import 'package:aerovania_app_1/widgets/custom_image.dart';
 import 'package:flutter/material.dart';
 
 class LessonItems extends StatelessWidget {

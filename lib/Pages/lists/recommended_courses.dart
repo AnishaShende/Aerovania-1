@@ -1,9 +1,9 @@
-import 'package:aerovania_app_1/Pages/course_details.dart';
-import 'package:aerovania_app_1/Pages/course_items.dart';
-import 'package:aerovania_app_1/utils/data.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../models/course.dart';
+import '../course_details.dart';
+import '../course_items.dart';
 
 class RecommendedCourses extends StatefulWidget {
   const RecommendedCourses({super.key});
@@ -19,9 +19,31 @@ class _RecommendedCoursesState extends State<RecommendedCourses> {
 
   @override
   void initState() {
-    // TODO: implement initState
+    // Initialize the ScrollController
     scrollController = ScrollController();
     super.initState();
+  }
+
+  Future<List<Course>> fetchRecommendedCourses() async {
+    List<Course> recommendedCourses = [];
+
+    // Get the recommends collection
+    QuerySnapshot recommendSnapshot =
+        await FirebaseFirestore.instance.collection('recommends').get();
+
+    // Fetch each recommended course
+    for (var doc in recommendSnapshot.docs) {
+      String courseId = doc['courseId'];
+      DocumentSnapshot courseSnapshot = await FirebaseFirestore.instance
+          .collection('courses')
+          .doc(courseId)
+          .get();
+      Course course =
+          Course.fromMap(courseSnapshot.data() as Map<String, dynamic>);
+      recommendedCourses.add(course);
+    }
+
+    return recommendedCourses;
   }
 
   @override
@@ -36,7 +58,6 @@ class _RecommendedCoursesState extends State<RecommendedCourses> {
               color: Colors.black, fontSize: 25, fontWeight: FontWeight.w500),
         ),
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        // backgroundColor: const Color(0xffbfe0f8),
         elevation: 1,
         leading: IconButton(
           onPressed: () {
@@ -48,41 +69,45 @@ class _RecommendedCoursesState extends State<RecommendedCourses> {
           ),
         ),
       ),
-      body: CustomScrollView(
-        controller: scrollController,
-        slivers: [
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (context, index) {
-                return Padding(
-                  padding: const EdgeInsets.only(top: 5, left: 15, right: 15),
-                  child: CourseItem(
-                    data: Course.fromMap(recommends[index]),
-                    // onBookmark: () {
-                    //   courses[index]["is_favorited"] =
-                    //       !courses[index]["is_favorited"];
-                    // },
-                    onTap: () {
-                      Course courseD =
-                        Course.fromMap(recommends[index]);
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => CourseDetails(course: courseD),
-                    ));
+      body: FutureBuilder<List<Course>>(
+        future: fetchRecommendedCourses(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Center(child: Text('No recommended courses available'));
+          } else {
+            List<Course> recommendedCourses = snapshot.data!;
+            return CustomScrollView(
+              controller: scrollController,
+              slivers: [
+                SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      return Padding(
+                        padding:
+                            const EdgeInsets.only(top: 5, left: 15, right: 15),
+                        child: CourseItem(
+                          data: recommendedCourses[index],
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => CourseDetails(
+                                  course: recommendedCourses[index]),
+                            ));
+                          },
+                        ),
+                      );
                     },
+                    childCount: recommendedCourses.length,
                   ),
-                );
-              },
-              childCount: recommends.length,
-            ),
-          ),
-        ],
+                ),
+              ],
+            );
+          }
+        },
       ),
-      // ListView.builder(
-      //   itemCount: recommends.length,
-      //   itemBuilder: (BuildContext context, int index) {
-      //     return ;
-      //   },
-      // ),
     ));
   }
 }

@@ -7,6 +7,7 @@ class Course {
   final String session;
   final String review;
   final bool isFavorited;
+  final List<String> category;
   final String description;
 
   Course({
@@ -18,6 +19,7 @@ class Course {
     required this.session,
     required this.review,
     required this.isFavorited,
+    required this.category,
     required this.description,
   });
 
@@ -31,6 +33,7 @@ class Course {
       session: map['session'],
       review: map['review'],
       isFavorited: map['is_favorited'],
+      category: List<String>.from(map['category'] ?? []),
       description: map['description'],
     );
   }
@@ -45,6 +48,7 @@ class Course {
       'session': session,
       'review': review,
       'is_favorited': isFavorited,
+      'category': category,
       'description': description,
     };
   }

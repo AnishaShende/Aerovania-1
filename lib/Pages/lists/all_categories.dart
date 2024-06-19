@@ -1,8 +1,8 @@
-import 'package:aerovania_app_1/Pages/lists/all_courses.dart';
-import 'package:aerovania_app_1/Pages/side%20navigation%20bar/home_screen.dart';
-import 'package:aerovania_app_1/utils/data.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+import '../../models/course.dart';
+import 'filtered_list.dart';
 
 class AllCategories extends StatefulWidget {
   const AllCategories({super.key});
@@ -12,14 +12,43 @@ class AllCategories extends StatefulWidget {
 }
 
 class _AllCategoriesState extends State<AllCategories> {
-  int selectedCategoryIndex = 0;
-
   late ScrollController scrollController;
 
   @override
   void initState() {
     scrollController = ScrollController();
     super.initState();
+  }
+
+  Future<List<Map<String, dynamic>>> fetchCategories() async {
+    List<Map<String, dynamic>> categoriesList = [];
+
+    // Get the categories collection
+    QuerySnapshot categorySnapshot =
+        await FirebaseFirestore.instance.collection('categories').get();
+
+    // Fetch each category
+    for (var doc in categorySnapshot.docs) {
+      categoriesList.add(doc.data() as Map<String, dynamic>);
+    }
+
+    return categoriesList;
+  }
+
+  Future<List<Course>> fetchCourses() async {
+    List<Course> allCourses = [];
+
+    // Get the courses collection
+    QuerySnapshot courseSnapshot =
+        await FirebaseFirestore.instance.collection('courses').get();
+
+    // Fetch each course
+    for (var doc in courseSnapshot.docs) {
+      Course course = Course.fromMap(doc.data() as Map<String, dynamic>);
+      allCourses.add(course);
+    }
+
+    return allCourses;
   }
 
   @override
@@ -34,7 +63,6 @@ class _AllCategoriesState extends State<AllCategories> {
                 color: Colors.black, fontSize: 25, fontWeight: FontWeight.w500),
           ),
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          // backgroundColor: const Color(0xffbfe0f8),
           elevation: 1,
           leading: IconButton(
             onPressed: () {
@@ -46,35 +74,53 @@ class _AllCategoriesState extends State<AllCategories> {
             ),
           ),
         ),
-        body: ListView.builder(
-          padding: const EdgeInsets.only(top: 5, left: 10, right: 10),
-          itemCount: categories.length - 1,
-          itemBuilder: (context, index) {
-            return Card(
-              margin: const EdgeInsets.only(bottom: 10),
-              child: ListTile(
-                minTileHeight: MediaQuery.of(context).size.height * .15,
-                minLeadingWidth: MediaQuery.of(context).size.width * .15,
-                leading: Image.asset(
-                  categories[index + 1]["icon"],
-                  height: MediaQuery.of(context).size.height * .1,
-                  width: MediaQuery.of(context).size.width * .1,
-                  // color: selectedCategoryIndex == index
-                  //     ? Colors.white
-                  //     : Colors.black,
-                ),
-                title: Text(categories[index + 1]["name"],
-                    style: const TextStyle(fontSize: 20)),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const AllCourses(),
+        body: FutureBuilder<List<Map<String, dynamic>>>(
+          future: fetchCategories(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return Center(child: Text('No categories available'));
+            } else {
+              List<Map<String, dynamic>> categories = snapshot.data!;
+              return ListView.builder(
+                padding: const EdgeInsets.only(top: 5, left: 10, right: 10),
+                itemCount: categories.length,
+                itemBuilder: (context, index) {
+                  final category = categories[index];
+                  return Card(
+                    margin: const EdgeInsets.only(bottom: 10),
+                    child: ListTile(
+                      minVerticalPadding:
+                          MediaQuery.of(context).size.height * .05,
+                      leading: Image.network(
+                        category["icon"],
+                        height: MediaQuery.of(context).size.height * .1,
+                        width: MediaQuery.of(context).size.width * .1,
+                      ),
+                      title: Text(
+                        category["name"],
+                        style: const TextStyle(fontSize: 20),
+                      ),
+                      onTap: () async {
+                        List<Course> courses = await fetchCourses();
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => FilteredCoursesScreen(
+                              category: category['name'],
+                              courses: courses,
+                            ),
+                          ),
+                        );
+                      },
                     ),
                   );
                 },
-              ),
-            );
+              );
+            }
           },
         ),
       ),

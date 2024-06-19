@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:readmore/readmore.dart';
 
@@ -6,6 +7,7 @@ import '../components/bookmark_box.dart';
 import '../components/color.dart';
 import '../components/lesson_items.dart';
 import '../models/course.dart';
+import '../services/helper/firebase_services.dart';
 import '../services/pdf/pdf_screen.dart';
 import '../services/video/video_player.dart';
 import '../widgets/custom_image.dart';
@@ -18,10 +20,13 @@ class CourseDetails extends StatefulWidget {
   State<CourseDetails> createState() => _CourseDetailsState();
 }
 
-class _CourseDetailsState extends State<CourseDetails> with SingleTickerProviderStateMixin {
+class _CourseDetailsState extends State<CourseDetails>
+    with SingleTickerProviderStateMixin {
   late TabController tabController;
   late Course courseData;
   bool isPurchased = false;
+  final String userId = FirebaseAuth.instance.currentUser!.uid;
+  // final String courseId = Course.id;
   final CollectionReference assignmentsCollection = FirebaseFirestore.instance
       .collection('course_1')
       .doc('course_documents')
@@ -370,10 +375,12 @@ class _CourseDetailsState extends State<CourseDetails> with SingleTickerProvider
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
               ),
-              onPressed: () {
+              onPressed: () async {
                 setState(() {
                   isPurchased = true;
                 });
+                await FirebaseService()
+                    .uploadPurchasedCourses(userId, [courseData.id.toString()]);
               },
               child: const Padding(
                 padding: EdgeInsets.all(20),

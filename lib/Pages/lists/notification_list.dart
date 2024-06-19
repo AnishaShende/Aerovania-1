@@ -45,9 +45,9 @@ class _NotificationsListState extends State<NotificationsList> {
         body: Center(
           child: Text('No new notifications!',
               style: TextStyle(
-                  fontSize: 17,
-                  color: Colors.grey,
-                  fontWeight: FontWeight.bold)),
+                fontSize: 17,
+                color: Colors.grey,
+              )),
         ),
       ),
     );

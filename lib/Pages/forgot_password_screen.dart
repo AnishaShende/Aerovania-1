@@ -1,11 +1,8 @@
-// import 'package:aerovania_app_1/Pages/login_page.dart';
-import 'package:aerovania_app_1/Pages/otp_screen.dart';
+
 import 'package:aerovania_app_1/Pages/password_changed_screen.dart';
 import 'package:aerovania_app_1/services/auth/auth_gate.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-// import 'package:login_signup_flow_app/screens/login_screen.dart';
-// import 'package:login_signup_flow_app/screens/otp_screen.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   ForgotPasswordScreen({Key? key}) : super(key: key);

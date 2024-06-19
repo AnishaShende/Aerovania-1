@@ -1,12 +1,8 @@
-// import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:firebase_auth/firebase_auth.dart';
 import 'package:aerovania_app_1/Pages/bottom%20navigation%20bar/search_page.dart';
 import 'package:aerovania_app_1/Pages/course_details.dart';
-import 'package:aerovania_app_1/Pages/home_page.dart';
 import 'package:aerovania_app_1/Pages/lists/all_categories.dart';
 import 'package:aerovania_app_1/Pages/lists/recommended_courses.dart';
 import 'package:aerovania_app_1/components/color.dart';
-import 'package:aerovania_app_1/utils/data.dart';
 import 'package:aerovania_app_1/widgets/category_box.dart';
 import 'package:aerovania_app_1/widgets/feature_item.dart';
 import 'package:aerovania_app_1/widgets/notification_box.dart';
@@ -15,68 +11,46 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:sidebarx/sidebarx.dart';
 
 import '../../models/course.dart';
-
-// import 'chat_page.dart';
+import '../lists/filtered_list.dart';
+import '../lists/notification_list.dart';
+import '../../data/courses_data.dart' as Courses;
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({Key? key}) : super(key: key);
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int selectedIndex = 0;
-  var username = '';
+  late String username;
 
   @override
   void initState() {
     super.initState();
-    selectedIndex = 0;
+    username = '';
   }
-
-  final _controller = SidebarXController(selectedIndex: 0, extended: true);
-
-  // final FirebaseAuth _auth = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<String>(
-      future: retrieveName(), // the Future your FutureBuilder will work with
+      future: retrieveName(),
       builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(
-              child:
-                  CircularProgressIndicator()); // show a loading spinner while waiting
+          return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
-          return Text(
-              'Error: ${snapshot.error}'); // show an error message if something went wrong
+          return Text('Error: ${snapshot.error}');
         } else {
+          username = snapshot.data ?? '';
           return Scaffold(
-            drawer: SafeArea(child: ExampleSidebarX(controller: _controller)),
-
-            // body: _buildUserList(),
             backgroundColor: const Color(0xffbfe0f8),
             body: CustomScrollView(
               slivers: [
                 SliverAppBar(
                   leading: IconButton(
                     onPressed: () {
-                      // ExampleSidebarX(controller: _controller);
-                      // _controller.setExtended(true);
-                      //   Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(builder: (context) => _pages[_controller.selectedIndex]),
-                      //   );
-                      //   _pages[_controller.selectedIndex];
-                      //   if (!Platform.isAndroid && !Platform.isIOS) {
-                      //     _controller.setExtended(true);
-                      //   }
-                      //   _key.currentState?.openDrawer();
                       Scaffold.of(context).openDrawer();
                     },
                     icon: const Icon(Icons.menu, color: Colors.black),
@@ -93,10 +67,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     childCount: 1,
                   ),
                 ),
-                //   SliverToBoxAdapter(
-                //     child: _bottomnavpages[selectedIndex],
-                // ),
-                // _bottomnavpages[selectedIndex],
               ],
             ),
           );
@@ -122,8 +92,7 @@ class _HomeScreenState extends State<HomeScreen> {
         .collection('users')
         .doc(currentUser!.uid)
         .get();
-    username = document.data()?['username'] ?? '';
-    return username;
+    return document.data()?['username'] ?? '';
   }
 
   Widget _buildAppBar() {
@@ -174,16 +143,22 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             child: Icon(
               Icons.search,
-              // width: 20,
-              // height: 20,
             ),
           ),
         ),
         SizedBox(
           width: 15,
         ),
-        NotificationBox(
-          notifiedNumber: 1,
+        GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => NotificationsList()),
+            );
+          },
+          child: NotificationBox(
+            notifiedNumber: 0,
+          ),
         )
       ],
     );
@@ -222,13 +197,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 Text(
                   "Recommended",
                   style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.w600,
-                      color: AppColor.textColor),
+                    fontSize: 22,
+                    fontWeight: FontWeight.w600,
+                    color: AppColor.textColor,
+                  ),
                 ),
                 GestureDetector(
-                  onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                      builder: ((context) => const RecommendedCourses()))),
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                        builder: ((context) => const RecommendedCourses())),
+                  ),
                   child: Text(
                     "See all",
                     style: TextStyle(fontSize: 14, color: AppColor.darker),
@@ -238,123 +216,137 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           _buildRecommended(),
-          // _bottomnavpages[selectedIndex],
         ],
       ),
     );
   }
 
-  _buildCategories() {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.fromLTRB(15, 10, 0, 10),
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: List.generate(
-          categories.length,
-          (index) => Padding(
-            padding: const EdgeInsets.only(right: 15),
-            child: CategoryBox(
-                selectedColor: Colors.white,
-                data: categories[index],
-                onTap: () {
-                  if (index == 0) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const AllCategories()),
-                    );
-                  }
-                }),
-          ),
-        ),
-      ),
-    );
-  }
+  Widget _buildCategories() {
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance.collection('categories').snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        }
 
-  _buildFeatured() {
-    return CarouselSlider(
-      options: CarouselOptions(
-        height: 290,
-        enlargeCenterPage: true,
-        disableCenter: true,
-        viewportFraction: .75,
-      ),
-      items: List.generate(
-        features.length,
-        (index) => FeatureItem(
-            // key: ValueKey(features[index].id), // Added
-            data: features[index],
-            onTap: () {
-              Course courseD = Course.fromMap(features[index]);
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => CourseDetails(course: courseD),
-              ));
-            }),
-      ),
-    );
-  }
+        if (!snapshot.hasData || snapshot.hasError) {
+          return Text('Error fetching categories');
+        }
 
-  _buildRecommended() {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.fromLTRB(15, 5, 0, 5),
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: List.generate(
-          recommends.length,
-          (index) => Padding(
-            padding: const EdgeInsets.only(right: 10),
-            child: RecommendItem(
-              // key: ValueKey(recommends[index].id), // Added
-              data: recommends[index],
+        List<DocumentSnapshot> categories = snapshot.data!.docs;
+
+        return SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(15, 10, 0, 10),
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: List.generate(
+              categories.length,
+              (index) => Padding(
+                padding: const EdgeInsets.only(right: 15),
+                child: CategoryBox(
+                  selectedColor: Colors.white,
+                  data: categories[index].data() as Map<String, dynamic>,
+                  onTap: () {
+                    if (index == 0) {
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => AllCategories(),
+                      ));
+                    } else {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => FilteredCoursesScreen(
+                            category: categories[index]['name'],
+                            courses: Courses.courses,
+                          ),
+                        ),
+                      );
+                    }
+                  },
+                ),
+              ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
+
+  Widget _buildFeatured() {
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance.collection('features').snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        }
+
+        if (!snapshot.hasData || snapshot.hasError) {
+          return Text('Error fetching featured items');
+        }
+
+        List<DocumentSnapshot> features = snapshot.data!.docs;
+
+        return CarouselSlider(
+          options: CarouselOptions(
+            height: 290,
+            enlargeCenterPage: true,
+            disableCenter: true,
+            viewportFraction: .75,
+          ),
+          items: List.generate(
+            features.length,
+            (index) => FeatureItem(
+              data: features[index].data() as Map<String, dynamic>,
+              onTap: () {
+                Course courseD = Course.fromMap(
+                    features[index].data() as Map<String, dynamic>);
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => CourseDetails(course: courseD),
+                ));
+              },
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildRecommended() {
+    return StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance.collection('recommends').snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          }
+
+          if (!snapshot.hasData || snapshot.hasError) {
+            return Text('Error fetching recommended items');
+          }
+
+          List<DocumentSnapshot> recommends = snapshot.data!.docs;
+
+          return SingleChildScrollView(
+            padding: const EdgeInsets.fromLTRB(15, 5, 0, 5),
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: List.generate(
+                recommends.length,
+                (index) => Padding(
+                  padding: const EdgeInsets.only(right: 10),
+                  child: RecommendItem(
+                    data: recommends[index].data() as Map<String, dynamic>,
+                    onTap: () {
+                      Course courseD = Course.fromMap(
+                          recommends[index].data() as Map<String, dynamic>);
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => CourseDetails(course: courseD),
+                      ));
+                    },
+                  ),
+                ),
+              ),
+            ),
+          );
+        });
+  }
 }
-
-
-  // Widget _buildUserList() {
-    // return StreamBuilder<QuerySnapshot>(
-    //   stream: FirebaseFirestore.instance.collection('users').snapshots(),
-    //   builder: (context, snapshot) {
-    //     if (snapshot.hasError) {
-    //       return const Text('Error!');
-    //     }
-    //     if (snapshot.connectionState == ConnectionState.waiting) {
-    //       return const Text('Loading...');
-    //     }
-
-    //     return ListView(
-    //       children: snapshot.data!.docs
-    //           .map<Widget>((doc) => _buildUserListItem(doc))
-    //           .toList(),
-    //     );
-    //   },
-    // );
-  // }
-
-  // _buildUserListItem(DocumentSnapshot document) {
-    // Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
-
-    // if (_auth.currentUser!.email != data['email']) {
-    //   return ListTile(
-    //     title: Text(data['email']),
-    //     onTap: () {
-    //       Navigator.push(
-    //           context,
-    //           MaterialPageRoute(
-    //             builder: (context) => ChatPage(
-    //               receiverUserEmail: data['email'],
-    //               receiverUserName: data['name'],
-    //               receiverUserID: data['uid'],
-    //             ),
-    //           ));
-    //     },
-    //   );
-    // } else {
-    //   return Container();
-    // }
-  // }
-// }

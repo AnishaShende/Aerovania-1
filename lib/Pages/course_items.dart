@@ -1,12 +1,12 @@
 import 'package:aerovania_app_1/components/bookmark_box.dart';
 import 'package:aerovania_app_1/components/color.dart';
-import 'package:aerovania_app_1/utils/data.dart';
+// import 'package:aerovania_app_1/models/course.dart';
+// import 'package:aerovania_app_1/utils/data.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class CourseItem extends StatelessWidget {
-  const CourseItem(
-      {super.key, required this.data, required this.onTap});
+  const CourseItem({super.key, required this.data, required this.onTap});
 
   final data;
   // final GestureTapCallback? onBookmark;
@@ -98,8 +98,8 @@ class CourseItem extends StatelessWidget {
                             children: [
                               getAttribute(Icons.schedule_outlined,
                                   data.duration, AppColor.labelColor),
-                              getAttribute(Icons.star,
-                                  data.review.toString(), AppColor.yellow),
+                              getAttribute(Icons.star, data.review.toString(),
+                                  AppColor.yellow),
                             ],
                           ),
                         ],
