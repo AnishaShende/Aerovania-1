@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class LessonItems extends StatelessWidget {
   const LessonItems({super.key, required this.name, required this.thumbnail, required this.duration});
-  // final data;
+  
   final name;
   final thumbnail;
   final duration;
@@ -29,7 +29,7 @@ class LessonItems extends StatelessWidget {
         children: [
           Image.asset(
             thumbnail ?? '',
-            // radius: 10,
+            
             width: 70,
             height: 70,
           ),

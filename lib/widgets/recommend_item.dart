@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-// import 'package:online_course/theme/color.dart';
 import 'package:aerovania_app_1/widgets/custom_image.dart';
 
 import '../components/color.dart';
@@ -30,7 +29,7 @@ class RecommendItem extends StatelessWidget {
               color: Colors.grey.withOpacity(0.1),
               spreadRadius: 1,
               blurRadius: 1,
-              offset: Offset(1, 1), // changes position of shadow
+              offset: Offset(1, 1),
             ),
           ],
         ),

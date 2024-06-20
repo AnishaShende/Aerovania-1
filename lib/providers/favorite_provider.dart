@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../models/course.dart';
 
 class FavoriteNotifier extends StateNotifier<List<Course>> {
@@ -20,11 +21,13 @@ class FavoriteNotifier extends StateNotifier<List<Course>> {
     }
   }
 
-  Future<void> _updateFavoritesInFirestore(Course course, {bool remove = false}) async {
+  Future<void> _updateFavoritesInFirestore(Course course,
+      {bool remove = false}) async {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return;
 
-    final userDoc = FirebaseFirestore.instance.collection('users').doc(user.uid);
+    final userDoc =
+        FirebaseFirestore.instance.collection('users').doc(user.uid);
 
     try {
       if (remove) {

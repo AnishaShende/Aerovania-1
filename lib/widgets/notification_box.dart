@@ -1,8 +1,6 @@
 import 'package:aerovania_app_1/components/color.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:flutter/material.dart';
-// import 'package:flutter_svg/flutter_svg.dart';
-// import 'package:online_course/theme/color.dart';
 
 class NotificationBox extends StatelessWidget {
   NotificationBox({

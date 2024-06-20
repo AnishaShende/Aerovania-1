@@ -23,11 +23,9 @@ class _AllCategoriesState extends State<AllCategories> {
   Future<List<Map<String, dynamic>>> fetchCategories() async {
     List<Map<String, dynamic>> categoriesList = [];
 
-    // Get the categories collection
     QuerySnapshot categorySnapshot =
         await FirebaseFirestore.instance.collection('categories').get();
 
-    // Fetch each category
     for (var doc in categorySnapshot.docs) {
       categoriesList.add(doc.data() as Map<String, dynamic>);
     }
@@ -38,11 +36,9 @@ class _AllCategoriesState extends State<AllCategories> {
   Future<List<Course>> fetchCourses() async {
     List<Course> allCourses = [];
 
-    // Get the courses collection
     QuerySnapshot courseSnapshot =
         await FirebaseFirestore.instance.collection('courses').get();
 
-    // Fetch each course
     for (var doc in courseSnapshot.docs) {
       Course course = Course.fromMap(doc.data() as Map<String, dynamic>);
       allCourses.add(course);

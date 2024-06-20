@@ -32,17 +32,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 color: Colors.black, fontSize: 25, fontWeight: FontWeight.w500),
           ),
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          // backgroundColor: const Color(0xffbfe0f8),
           elevation: 1,
-          // leading: IconButton(
-          //   onPressed: () {
-          //     Navigator.of(context).pop();
-          //   },
-          //   icon: const Icon(
-          //     Icons.arrow_back,
-          //     color: Colors.black,
-          //   ),
-          // ),
         ),
       ),
     );

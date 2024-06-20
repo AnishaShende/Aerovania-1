@@ -16,6 +16,7 @@ class FilteredCoursesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
     // Filter the courses based on the selected category
     if (category == 'All') {
       filteredCourses = courses;

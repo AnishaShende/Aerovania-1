@@ -14,7 +14,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
   bool isSaveLoading = false;
   TextEditingController fullNameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
-  // TextEditingController passwordController = TextEditingController();
   Map<String, dynamic> initialUserData = {};
 
   FirebaseService firebaseService = FirebaseService();
@@ -56,10 +55,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
       });
       initialUserData['username'] = fullNameController.text;
       initialUserData['email'] = emailController.text;
-      // Show a success message or feedback to the user
+      ScaffoldMessenger.of(context).clearSnackBars();
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text('Profile updated successfully!')));
     } catch (e) {
       print("Error saving changes: $e");
-      // Optionally, show an error message or feedback to the user
+      ScaffoldMessenger.of(context).clearSnackBars();
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text('Error updating profile!')));
     }
     setState(() => isSaveLoading = false);
   }
@@ -133,26 +136,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                       'assets/images/applogo.png',
                                     ))),
                           ),
-                          Positioned(
-                              bottom: 0,
-                              right: 0,
-                              child: Container(
-                                height: 40,
-                                width: 40,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  border: Border.all(
-                                    width: 4,
-                                    color: Theme.of(context)
-                                        .scaffoldBackgroundColor,
-                                  ),
-                                  color: Colors.black,
-                                ),
-                                child: const Icon(
-                                  Icons.edit,
-                                  color: Colors.white,
-                                ),
-                              )),
                         ],
                       ),
                     ),
@@ -161,7 +144,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     ),
                     buildTextField("Full Name", fullNameController, false),
                     buildTextField("E-mail", emailController, false),
-                    // buildTextField("Password", passwordController, true),
                     const SizedBox(
                       height: 35,
                     ),

@@ -65,21 +65,6 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
           (Route<dynamic> route) => false,
         );
       });
-      // if (user == null) {
-      //   // If user is not found, show a snackbar suggesting registration
-      //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      //     content: const Text('User not found. Please register first.'),
-      //     action: SnackBarAction(
-      //       label: 'Register',
-      //       onPressed: () {
-      //         // Navigate to RegisterPage or handle accordingly
-      //       },
-      //     ),
-      //   ));
-      // } else {
-      //   Navigator.push(
-      //       context, MaterialPageRoute(builder: (context) => const HomePage()));
-      // // }
     } catch (e) {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(e.toString())));

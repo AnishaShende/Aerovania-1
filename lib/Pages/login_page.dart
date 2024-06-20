@@ -54,7 +54,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       });
       final user = await authService.signInWithGoogle();
       if (user == null) {
-        // If user is not found, show a snackbar suggesting registration
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: const Text('User not found. Please register first.'),
           action: SnackBarAction(

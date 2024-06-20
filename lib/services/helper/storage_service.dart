@@ -28,7 +28,7 @@ class FileStorageService {
         var docSnapshot = await _firestore
             .collection('course_1')
             .doc(
-                'course_documents') // assuming a single document for simplicity
+                'course_documents')
             .collection(subcollectionPath)
             .doc(fileName)
             .get();
@@ -38,7 +38,7 @@ class FileStorageService {
           await _firestore
               .collection('course_1')
               .doc(
-                  'course_documents') // assuming a single document for simplicity
+                  'course_documents')
               .collection(subcollectionPath)
               .doc(fileName)
               .set({
@@ -54,7 +54,6 @@ class FileStorageService {
     } on FirebaseException catch (e) {
       print('Firebase Error: ${e.message}');
       if (e.code == 'too-many-requests') {
-        // Implement retry logic here if necessary
         print('Too many requests. Please try again later.');
       }
     } catch (e) {
@@ -63,8 +62,6 @@ class FileStorageService {
   }
 
   uploadCategories() async {
-    // FirebaseFirestore firestore = FirebaseFirestore.instance;
-// Your categories data
     List<Map<String, String>> categories = [
       {"name": "All", "icon": "assets/icons/category/all.jpg"},
       {"name": "Coding", "icon": "assets/icons/category/coding.jpg"},
@@ -112,7 +109,7 @@ class FileStorageService {
 
 
 
-// function logic
+// use this function logic for storing videos and assignments data in firestore
 
 // FileStorageService storageService = FileStorageService();
 

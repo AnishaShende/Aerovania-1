@@ -325,17 +325,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   data: courseData[index],
                   onTap: () async {
                     var course = courseData[index];
-                    if (course != null) {
-                      Course courseD = Course.fromMap(course);
-                      Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => CourseDetails(course: courseD),
-                      ));
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Course not found')),
-                      );
-                    }
-                  },
+                    Course courseD = Course.fromMap(course);
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => CourseDetails(course: courseD),
+                    ));
+                                    },
                 ),
               ),
             );
@@ -357,7 +351,6 @@ class _HomeScreenState extends State<HomeScreen> {
           return Text('Error fetching recommended items');
         }
 
-        // Assuming 'recommends' collection documents have a field 'CourseId'
         List<String> courseIds = snapshot.data!.docs
             .map((doc) =>
                 (doc.data() as Map<String, dynamic>)['CourseId'] as String)
@@ -397,18 +390,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       data: courseData[index],
                       onTap: () async {
                         var course = courseData[index];
-                        if (course != null) {
-                          Course courseD = Course.fromMap(course);
-                          Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) =>
-                                CourseDetails(course: courseD),
-                          ));
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Course not found')),
-                          );
-                        }
-                      },
+                        Course courseD = Course.fromMap(course);
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) =>
+                              CourseDetails(course: courseD),
+                        ));
+                                            },
                     ),
                   ),
                 ),

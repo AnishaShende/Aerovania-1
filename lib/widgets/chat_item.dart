@@ -1,6 +1,5 @@
 import 'package:aerovania_app_1/components/color.dart';
 import 'package:flutter/material.dart';
-// import 'package:online_course/theme/color.dart';
 import 'chat_notify.dart';
 import 'custom_image.dart';
 

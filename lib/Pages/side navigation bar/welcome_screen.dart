@@ -28,10 +28,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               "assets/images/welcome.jpg",
               height: MediaQuery.of(context).size.height * 0.45,
               width: MediaQuery.of(context).size.width,
-              // fit: BoxFit.cover,
             ),
             const SizedBox(height: 25),
-            //login button
             Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: 40,
@@ -68,7 +66,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 ],
               ),
             ),
-            //register button
             Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: 40,
@@ -89,7 +86,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => RegisterPage(
-                                    // onTap: togglePage,
                                     )));
                       },
                       child: const Padding(

@@ -1,7 +1,5 @@
 import 'package:aerovania_app_1/components/bookmark_box.dart';
 import 'package:aerovania_app_1/components/color.dart';
-// import 'package:aerovania_app_1/models/course.dart';
-// import 'package:aerovania_app_1/utils/data.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
@@ -9,7 +7,6 @@ class CourseItem extends StatelessWidget {
   const CourseItem({super.key, required this.data, required this.onTap});
 
   final data;
-  // final GestureTapCallback? onBookmark;
   final GestureTapCallback? onTap;
 
   @override
@@ -39,8 +36,8 @@ class CourseItem extends StatelessWidget {
               children: [
                 SizedBox(
                   width:
-                      MediaQuery.of(context).size.width * .9, //double.infinity,
-                  height: MediaQuery.of(context).size.height * .28, //200,
+                      MediaQuery.of(context).size.width * .9,
+                  height: MediaQuery.of(context).size.height * .28,
                   child: CachedNetworkImage(
                     imageBuilder: (context, imageProvider) => Container(
                       decoration: BoxDecoration(
@@ -54,23 +51,15 @@ class CourseItem extends StatelessWidget {
               ],
             ),
             Positioned(
-                top: 195, //MediaQuery.of(context).size.height * .65, //175,
+                top: 195,
                 right: 15,
-                // Container(
-                // alignment: Alignment.topRight,
                 child: BookmarkBox(
                   course: data,
-                  // onTap: onBookmark,
-                  // isBookmarked: data["is_favorited"],
                 )),
-            //),
             Positioned(
               top: 230,
-              // Container(
-              // alignment: Alignment.topCenter,
               child: SizedBox(
                 width: MediaQuery.of(context).size.width * .6,
-                //MediaQuery.of(context).size.width - 60,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -80,7 +69,7 @@ class CourseItem extends StatelessWidget {
                           fontSize: 18, fontWeight: FontWeight.w500),
                     ),
                     SizedBox(
-                      height: MediaQuery.of(context).size.height * .3, //15,
+                      height: MediaQuery.of(context).size.height * .3,
 
                       child: Column(
                         children: [

@@ -1,7 +1,6 @@
 import 'package:aerovania_app_1/services/auth/auth_gate.dart';
 import 'package:aerovania_app_1/services/auth/auth_services.dart';
 import 'package:flutter/material.dart';
-// import 'package:login_signup_flow_app/screens/login_screen.dart';
 
 class PasswordCreatedScreen extends StatelessWidget {
   PasswordCreatedScreen({Key? key, required this.isLogged}) : super(key: key);
@@ -55,7 +54,6 @@ class PasswordCreatedScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 40),
-                //register button
                 Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 20,

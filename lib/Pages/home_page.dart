@@ -1,5 +1,5 @@
 import 'package:aerovania_app_1/Pages/bottom%20navigation%20bar/product_list.dart';
-import 'package:aerovania_app_1/Pages/side%20navigation%20bar/product_screen.dart';
+import 'package:aerovania_app_1/Pages/lists/all_courses.dart';
 import 'package:aerovania_app_1/Pages/side%20navigation%20bar/settings_screen.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -9,7 +9,6 @@ import 'bottom navigation bar/my_courses.dart';
 import 'bottom navigation bar/favorite_page.dart';
 import 'side navigation bar/about_screen.dart';
 import 'side navigation bar/contact_screen.dart';
-import 'side navigation bar/course_screen.dart';
 import 'side navigation bar/history_screen.dart';
 import 'side navigation bar/home_screen.dart';
 import 'side navigation bar/media_screen.dart';
@@ -25,7 +24,7 @@ FirebaseAuth auth = FirebaseAuth.instance;
 var uid = auth.currentUser!.uid;
 final List<Widget> _bottomnavpages = [
   const HomeScreen(),
-  ProductList(),
+  ProductList(isNav: false),
   MyCourses(userId: uid),
   const FavoriteScreen()
 ];
@@ -47,7 +46,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       key: _key,
       drawer: ExampleSidebarX(controller: _controller),
-      backgroundColor: const Color(0xffbfe0f8), //AppColor.appBgColor,
+      backgroundColor: const Color(0xffbfe0f8),
       bottomNavigationBar: CurvedNavigationBar(
         backgroundColor: Colors.transparent,
         index: selectedIndex,
@@ -94,7 +93,6 @@ class ExampleSidebarX extends StatelessWidget {
           margin: const EdgeInsets.all(10),
           decoration: BoxDecoration(
             color: canvasColor,
-            // color: white,
             borderRadius: BorderRadius.circular(20),
           ),
           hoverColor: scaffoldBackgroundColor,
@@ -104,7 +102,6 @@ class ExampleSidebarX extends StatelessWidget {
           selectedItemTextPadding: const EdgeInsets.only(left: 30),
           itemDecoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
-            // border: Border.all(color: canvasColor),
           ),
           selectedItemDecoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
@@ -133,7 +130,7 @@ class ExampleSidebarX extends StatelessWidget {
         extendedTheme: const SidebarXTheme(
           width: 200,
           decoration: BoxDecoration(
-            color: Colors.white, //canvasColor,
+            color: Colors.white,
           ),
         ),
         footerDivider: divider,
@@ -153,9 +150,9 @@ class ExampleSidebarX extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const CourseScreen()),
+                MaterialPageRoute(
+                    builder: (context) => AllCourses(isNav: true)),
               );
-              // const CourseScreen();
             },
           ),
           SidebarXItem(
@@ -164,9 +161,8 @@ class ExampleSidebarX extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const ProductScreen()),
+                MaterialPageRoute(builder: (context) => ProductList(isNav: true,)),
               );
-              // const ProductScreen();
             },
           ),
           SidebarXItem(
@@ -177,7 +173,6 @@ class ExampleSidebarX extends StatelessWidget {
                 context,
                 MaterialPageRoute(builder: (context) => const HistoryScreen()),
               );
-              // const HistoryScreen();
             },
           ),
           SidebarXItem(
@@ -188,7 +183,6 @@ class ExampleSidebarX extends StatelessWidget {
                 context,
                 MaterialPageRoute(builder: (context) => const MediaScreen()),
               );
-              // const MediaScreen();
             },
           ),
           SidebarXItem(
@@ -199,7 +193,6 @@ class ExampleSidebarX extends StatelessWidget {
                 context,
                 MaterialPageRoute(builder: (context) => const SettingsScreen()),
               );
-              // const SettingsScreen();
             },
           ),
           SidebarXItem(
@@ -210,9 +203,7 @@ class ExampleSidebarX extends StatelessWidget {
                 context,
                 MaterialPageRoute(builder: (context) => const AboutScreen()),
               );
-              // const AboutScreen();
             },
-            // onTap: ,
           ),
           SidebarXItem(
             icon: Icons.perm_phone_msg_sharp,
@@ -222,13 +213,8 @@ class ExampleSidebarX extends StatelessWidget {
                 context,
                 MaterialPageRoute(builder: (context) => const ContactScreen()),
               );
-              // const ContactScreen();
             },
           ),
-          // const SidebarXItem(
-          //   iconWidget: FlutterLogo(size: 20),
-          //   label: 'Flutter',
-          // ),
         ],
       ),
     );

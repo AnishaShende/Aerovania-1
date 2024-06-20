@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 class MyDialogBox extends StatelessWidget {
-  
   final String text;
   final VoidCallback onYesPressed;
   final VoidCallback onNoPressed;
@@ -19,9 +18,7 @@ class MyDialogBox extends StatelessWidget {
       child: SizedBox(
         width: MediaQuery.of(context).size.width * 0.5,
         height: MediaQuery.of(context).size.height * 0.4,
-        
         child: AlertDialog(
-          
           backgroundColor: Colors.transparent,
           content: Container(
             decoration: BoxDecoration(
@@ -37,53 +34,31 @@ class MyDialogBox extends StatelessWidget {
               color: Colors.white,
               borderRadius: BorderRadius.circular(12),
             ),
-            // style: NeumorphicStyle(
-            //   shape: NeumorphicShape.concave,
-            //   boxShape: NeumorphicBoxShape.roundRect(BorderRadius.circular(12)),
-            //   depth: 4,
-            //   intensity: 0.65,
-            // ),
             child: Container(
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    
                     text,
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                   ),
                   SizedBox(height: 16),
                   Row(
-                    
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       ElevatedButton(
                         onPressed: onYesPressed,
                         style: ButtonStyle(
-                          elevation: MaterialStateProperty.all(3.0),
+                          elevation: WidgetStateProperty.all(3.0),
                         ),
-                        //  NeumorphicStyle(
-                        //   shape: NeumorphicShape.flat,
-                        //   boxShape: NeumorphicBoxShape.roundRect(
-                        //       BorderRadius.circular(8.0)),
-                        //   depth: 4,
-                        //   intensity: 0.8,
-                        // ),
                         child: Text('Yes'),
                       ),
                       ElevatedButton(
                         onPressed: onNoPressed,
                         style: ButtonStyle(
-                          elevation: MaterialStateProperty.all(3.0),
+                          elevation: WidgetStateProperty.all(3.0),
                         ),
-                        // NeumorphicStyle(
-                        //   shape: NeumorphicShape.flat,
-                        //   boxShape: NeumorphicBoxShape.roundRect(
-                        //       BorderRadius.circular(8.0)),
-                        //   depth: 4,
-                        //   intensity: 0.8,
-                        // ),
                         child: Text('No'),
                       ),
                     ],
@@ -96,6 +71,4 @@ class MyDialogBox extends StatelessWidget {
       ),
     );
   }
-  
 }
-

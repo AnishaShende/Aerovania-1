@@ -66,7 +66,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 ),
               ),
               const SizedBox(height: 20),
-              //email
               Padding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 20,
@@ -158,7 +157,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   ],
                 ),
               ),
-              // const Spacer(),
               const SizedBox(
                 height: 30,
               ),

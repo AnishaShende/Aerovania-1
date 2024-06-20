@@ -1,4 +1,4 @@
-import 'dart:async'; // Import dart:async to use the Completer class
+import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
@@ -19,24 +19,23 @@ class _PdfScreenState extends State<PdfScreen> {
   String? pdfUrl;
   var newPdfUrl;
   var fileName;
-  bool isLoading = true; // Track loading state
-  int? pages; // Define pages to store the total number of pages
-  bool isReady =
-      false; // Define isReady to track if PDF is ready to be displayed
-  final Completer<PDFViewController> _controller = Completer<
-      PDFViewController>(); // Define a Completer for PDFViewController
+  bool isLoading = true;
+  int? pages;
+  bool isReady = false;
+  // Define a Completer for PDFViewController
+  final Completer<PDFViewController> _controller =
+      Completer<PDFViewController>();
   late Future<void> _loadPdfFuture;
 
   @override
   void initState() {
     super.initState();
     _loadPdfFuture = loadPdf();
-    // _loadPdf();
   }
 
   loadPdf() async {
     setState(() {
-      isLoading = true; // Indicate that loading has started
+      isLoading = true;
     });
 
     try {
@@ -50,7 +49,6 @@ class _PdfScreenState extends State<PdfScreen> {
 
       // Retrieve the URL from the document field
       if (docSnapshot.exists) {
-        // setState(() async {
         pdfUrl = docSnapshot['url'];
         fileName = docSnapshot['name'];
         final response = await http.get(Uri.parse(pdfUrl!));
@@ -63,11 +61,9 @@ class _PdfScreenState extends State<PdfScreen> {
         newPdfUrl = file.path;
         print('newPdfUrl: $newPdfUrl');
         setState(() {
-          isLoading = false; // Set loading state to false on error
+          isLoading = false;
         });
         displayPdf(newPdfUrl);
-        // isLoading = false; // Set loading state to false when PDF is loaded
-        // });
       } else {
         throw Exception('Document does not exist');
       }
@@ -75,11 +71,11 @@ class _PdfScreenState extends State<PdfScreen> {
       // Handle any errors
       print('Error fetching PDF URL: $e');
       setState(() {
-        isLoading = false; // Set loading state to false on error
+        isLoading = false;
       });
     }
     setState(() {
-      isLoading = false; // Set loading state to false on error
+      isLoading = false;
     });
   }
 
@@ -107,16 +103,12 @@ class _PdfScreenState extends State<PdfScreen> {
           _controller.complete(pdfViewController);
         },
         onPageChanged: (int? page, int? total) {
-          // Correct the parameter types to nullable int
           print('page change: $page/$total');
         },
-        //     ),
-        // ],
       );
     else {
       return Center(child: CircularProgressIndicator());
     }
-    //   );
   }
 
   @override

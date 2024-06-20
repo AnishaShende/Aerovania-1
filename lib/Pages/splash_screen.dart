@@ -49,19 +49,6 @@ class _SplashScreenState extends State<SplashScreen>
           onAnimationEnd: () => debugPrint("On Fade In End"),
           nextScreen: const AuthGate(),
         ),
-        // child: Column(
-        //   children: [
-        // Lottie.network(
-        //     "https://assets10.lottiefiles.com/packages/lf20_nhmiuj9f.json",
-        //     controller: _controller, onLoaded: (compos) {
-        //   _controller
-        //     ..duration = compos.duration
-        //     ..forward().then((value) => Navigator.push(context,
-        //         MaterialPageRoute(builder: (context) => AuthGate())));
-        // }),
-        // Text("AirChat", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Color(0xFF333333),),),
-        //   ],
-        // ),
       ),
     );
   }

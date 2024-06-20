@@ -10,7 +10,6 @@ class FirebaseService {
       DocumentSnapshot doc = await _db.collection('users').doc(userId).get();
       return doc.data() as Map<String, dynamic>;
     } on FirebaseException catch (e) {
-      // Consider using a logging framework or service
       print('Error getting user data: ${e.message}');
       throw Exception('Failed to get user data');
     }
@@ -24,15 +23,6 @@ class FirebaseService {
       throw Exception('Failed to update user data');
     }
   }
-  // Function for storing courses in the firebase database
-  // Future<void> storeCourses() async {
-  //   for (Course course in courses) {
-  //     await _db
-  //         .collection('courses')
-  //         .doc(course.id.toString())
-  //         .set(course.toMap());
-  //   }
-  // }
 
   Future<void> uploadBookmarkedData(
       String userId, List<String> bookmarkedData) async {

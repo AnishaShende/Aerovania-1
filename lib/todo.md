@@ -22,7 +22,7 @@
 - [x] Video Streaming
 - [x] Adding equipment buying thing
 - [ ] Buy course
-- [ ] Notification management
+- [x] Notification management
 - [x] Implementation of search functionality
 - [x] Overall state management using Riverpod
 
@@ -36,12 +36,12 @@
 - [x] ratings are hiding in featured courses
 - [x] fix all course viewing option
 - [x] fix see all option
-- [ ] add loading indicator in search page
+- [x] add loading indicator in search page
 
 ## Screen to create
 
 - [x] Favorite screen
-- [ ] Cart Screen
+- [x] Cart Screen
 - [x] Explore Screen
 - [x] Course Screen
 - [x] Products Screen

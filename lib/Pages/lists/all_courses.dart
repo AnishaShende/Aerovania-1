@@ -6,7 +6,8 @@ import '../course_details.dart';
 import '../course_items.dart';
 
 class AllCourses extends StatefulWidget {
-  const AllCourses({super.key});
+  AllCourses({super.key, required this.isNav});
+  bool isNav;
 
   @override
   State<AllCourses> createState() => _AllCoursesState();
@@ -56,8 +57,11 @@ class _AllCoursesState extends State<AllCourses> {
             onPressed: () {
               Navigator.of(context).pop();
             },
-            icon: const Icon(
+            icon: widget.isNav ? const Icon(
               Icons.arrow_back,
+              color: Colors.black,
+            ) : const Icon(
+              Icons.menu,
               color: Colors.black,
             ),
           ),

@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-// import 'package:online_course/theme/color.dart';
-
 import '../components/color.dart';
 import 'custom_image.dart';
 
@@ -35,7 +33,7 @@ class FeatureItem extends StatelessWidget {
               color: AppColor.shadowColor.withOpacity(0.1),
               spreadRadius: 1,
               blurRadius: 1,
-              offset: Offset(1, 1), // changes position of shadow
+              offset: Offset(1, 1),
             ),
           ],
         ),
@@ -82,9 +80,6 @@ class FeatureItem extends StatelessWidget {
               fontWeight: FontWeight.w600,
             ),
           ),
-          // const SizedBox(
-          //   height: 10,
-          // ),
           _buildAttributes(),
         ],
       ),
@@ -126,17 +121,11 @@ class FeatureItem extends StatelessWidget {
           AppColor.labelColor,
           data["session"],
         ),
-        // const SizedBox(
-        //   width: 12,
-        // ),
         _getAttribute(
           Icons.schedule_rounded,
           AppColor.labelColor,
           data["duration"],
         ),
-        // const SizedBox(
-        //   width: 12,
-        // ),
         _getAttribute(
           Icons.star,
           AppColor.yellow,

@@ -32,14 +32,13 @@ class CategoryBox extends StatelessWidget {
                   color: AppColor.shadowColor.withOpacity(0.1),
                   spreadRadius: 1,
                   blurRadius: 1,
-                  offset: Offset(1, 1), // changes position of shadow
+                  offset: Offset(1, 1),
                 ),
               ],
               shape: BoxShape.circle,
             ),
             child: Image.asset(
               data["icon"],
-              // color: isSelected ? selectedColor : AppColor.textColor,
               width: 30,
               height: 30,
             ),

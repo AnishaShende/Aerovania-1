@@ -30,7 +30,6 @@ class _NotificationsListState extends State<NotificationsList> {
                 color: Colors.black, fontSize: 25, fontWeight: FontWeight.w500),
           ),
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          // backgroundColor: const Color(0xffbfe0f8),
           elevation: 1,
           leading: IconButton(
             onPressed: () {

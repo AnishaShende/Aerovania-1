@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
 import '../components/color.dart';
-// import 'package:online_course/theme/color.dart';
 
 class BottomBarItem extends StatelessWidget {
   const BottomBarItem(
@@ -38,7 +36,7 @@ class BottomBarItem extends StatelessWidget {
                 color: AppColor.shadowColor.withOpacity(0.1),
                 spreadRadius: 2,
                 blurRadius: 2,
-                offset: Offset(0, 0), // changes position of shadow
+                offset: Offset(0, 0),
               ),
           ],
         ),

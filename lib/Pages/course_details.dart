@@ -26,7 +26,6 @@ class _CourseDetailsState extends State<CourseDetails>
   late Course courseData;
   bool isPurchased = false;
   final String userId = FirebaseAuth.instance.currentUser!.uid;
-  // final String courseId = Course.id;
   final CollectionReference assignmentsCollection = FirebaseFirestore.instance
       .collection('course_1')
       .doc('course_documents')

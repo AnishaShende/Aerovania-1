@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-
 import '../components/color.dart';
-// import 'package:online_course/theme/color.dart';
 
 
 class CustomTextBox extends StatelessWidget {

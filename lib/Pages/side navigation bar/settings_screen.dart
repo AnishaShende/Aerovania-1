@@ -24,8 +24,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   FirebaseAuth auth = FirebaseAuth.instance;
   final User? user = FirebaseAuth.instance.currentUser;
 
-  // String userId = user!.uid; // Replace this with your logic to get the user ID
-
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<DocumentSnapshot>(
@@ -33,7 +31,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           FirebaseFirestore.instance.collection('users').doc(user!.uid).get(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
-          return Center(child: Text('No data available'));
+          return Center(child: CircularProgressIndicator());
         }
 
         final userData = snapshot.data?.data() as Map<String, dynamic>;
@@ -236,12 +234,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       'notifications.$setting': value,
     });
   }
-  ///////////////////////////////////////
-  ///////////////////////////////////////
-  ///////////////////////////////////////
-  ///////////////////////////////////////
-  ///////////////////////////////////////
-
   GestureDetector changePasswordRow(BuildContext context, String title) {
     return GestureDetector(
       onTap: () {
@@ -250,29 +242,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             MaterialPageRoute(
                 builder: (context) => const CreatePasswordScreen()));
       },
-      //   showDialog(
-      //       context: context,
-      //       builder: (BuildContext context) {
-      //         return AlertDialog(
-      //           title: Text(title),
-      //           content: const Column(
-      //             mainAxisSize: MainAxisSize.min,
-      //             children: [
-      //               Text("Option 1"),
-      //               Text("Option 2"),
-      //               Text("Option 3"),
-      //             ],
-      //           ),
-      //           actions: [
-      //             TextButton(
-      //                 onPressed: () {
-      //                   Navigator.of(context).pop();
-      //                 },
-      //                 child: const Text("Close")),
-      //           ],
-      //         );
-      //       });
-      // },
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
         child: Row(
