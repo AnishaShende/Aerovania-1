@@ -16,6 +16,15 @@
 - [x] store bookmark data in datastore
 - [x] course updates and purchase data in datastore
 
+## More things to fix
+
+- [x] Fix bookmarked courses not showing after app restart
+- [] Fix forgot password page
+- [x] Fix my courses screen
+- [x] Fix register button loading bar
+- [x] Fix product screen
+- [x] Fix search page if possible
+
 ## Backend things
 
 - [x] Google authentication

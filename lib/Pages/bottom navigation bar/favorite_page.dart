@@ -71,9 +71,20 @@ class _FavoriteScreenState extends ConsumerState<FavoriteScreen> {
   }
 
   SliverChildBuilderDelegate showFavorites() {
-    final favoriteCourses = ref.watch(favoriteProvider);
+    final favoriteState = ref.watch(favoriteProvider);
 
-    if (favoriteCourses.isEmpty) {
+    if (favoriteState.isLoading) {
+      return SliverChildBuilderDelegate(
+        (context, index) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        },
+        childCount: 1,
+      );
+    }
+
+    if (favoriteState.courses.isEmpty) {
       return SliverChildBuilderDelegate((context, index) {
         return Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -118,20 +129,20 @@ class _FavoriteScreenState extends ConsumerState<FavoriteScreen> {
     } else {
       return SliverChildBuilderDelegate(
         (context, index) {
-          final course = favoriteCourses[index];
+          final course = favoriteState.courses[index];
           return Padding(
             padding: const EdgeInsets.only(top: 5, left: 15, right: 15),
             child: CourseItem(
               data: course,
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => CourseDetails(course: course),
+                  builder: (context) => CourseDetails(course: course, isPurchasedCourse: false),
                 ));
               },
             ),
           );
         },
-        childCount: favoriteCourses.length,
+        childCount: favoriteState.courses.length,
       );
     }
   }

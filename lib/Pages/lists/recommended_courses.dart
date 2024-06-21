@@ -94,7 +94,7 @@ class _RecommendedCoursesState extends State<RecommendedCourses> {
                           onTap: () {
                             Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) => CourseDetails(
-                                  course: recommendedCourses[index]),
+                                  course: recommendedCourses[index], isPurchasedCourse: false),
                             ));
                           },
                         ),

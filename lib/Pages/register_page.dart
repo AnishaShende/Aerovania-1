@@ -239,28 +239,30 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                     ),
                     child: Row(
                       children: [
-                        if (isLoading)
-                          const Center(child: CircularProgressIndicator()),
-                        if (!isLoading)
-                          Expanded(
-                            child: MaterialButton(
-                              color: const Color(0xFF1E232C),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              onPressed: signUp,
-                              child: const Padding(
-                                padding: EdgeInsets.all(15.0),
-                                child: Text(
-                                  "Register",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                              ),
+                        // if (isLoading)
+                        //   const Center(child: CircularProgressIndicator()),
+                        // if (!isLoading)
+                        Expanded(
+                          child: MaterialButton(
+                            color: const Color(0xFF1E232C),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            onPressed: signUp,
+                            child: Padding(
+                              padding: EdgeInsets.all(15.0),
+                              child: isLoading
+                                  ? CircularProgressIndicator()
+                                  : Text(
+                                      "Register",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                      ),
+                                    ),
                             ),
                           ),
+                        ),
                       ],
                     ),
                   ),

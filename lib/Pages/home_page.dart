@@ -24,7 +24,7 @@ FirebaseAuth auth = FirebaseAuth.instance;
 var uid = auth.currentUser!.uid;
 final List<Widget> _bottomnavpages = [
   const HomeScreen(),
-  ProductList(isNav: false),
+  ProductList(isNav: true),
   MyCourses(userId: uid),
   const FavoriteScreen()
 ];
@@ -161,7 +161,7 @@ class ExampleSidebarX extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => ProductList(isNav: true,)),
+                MaterialPageRoute(builder: (context) => ProductList(isNav: false,)),
               );
             },
           ),

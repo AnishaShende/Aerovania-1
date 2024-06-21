@@ -222,29 +222,31 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                         const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                     child: Row(
                       children: [
-                        if (isLoading)
-                          const Center(
-                              child:
-                                  Center(child: CircularProgressIndicator())),
-                        if (!isLoading)
-                          Expanded(
-                            child: MaterialButton(
-                              color: const Color(0xFF1E232C),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8)),
-                              onPressed: () {
-                                signIn();
-                              },
-                              child: const Padding(
-                                padding: EdgeInsets.all(15.0),
-                                child: Text(
-                                  "Login",
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 16),
-                                ),
-                              ),
+                        // if (isLoading)
+                        //   const Center(
+                        //       child:
+                        //           Center(child: CircularProgressIndicator())),
+                        // if (!isLoading)
+                        Expanded(
+                          child: MaterialButton(
+                            color: const Color(0xFF1E232C),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8)),
+                            onPressed: () {
+                              signIn();
+                            },
+                            child: Padding(
+                              padding: EdgeInsets.all(15.0),
+                              child: isLoading
+                                  ? CircularProgressIndicator()
+                                  : Text(
+                                      "Login",
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 16),
+                                    ),
                             ),
                           ),
+                        ),
                       ],
                     ),
                   ),

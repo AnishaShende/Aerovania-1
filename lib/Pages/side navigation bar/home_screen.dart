@@ -327,7 +327,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     var course = courseData[index];
                     Course courseD = Course.fromMap(course);
                     Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => CourseDetails(course: courseD),
+                      builder: (context) => CourseDetails(course: courseD, isPurchasedCourse: false),
                     ));
                                     },
                 ),
@@ -393,7 +393,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         Course courseD = Course.fromMap(course);
                         Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) =>
-                              CourseDetails(course: courseD),
+                              CourseDetails(course: courseD, isPurchasedCourse: false),
                         ));
                                             },
                     ),

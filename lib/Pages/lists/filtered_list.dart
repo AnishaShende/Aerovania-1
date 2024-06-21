@@ -38,7 +38,7 @@ class FilteredCoursesScreen extends StatelessWidget {
             data: course,
             onTap: () {
               Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => CourseDetails(course: course),
+                builder: (context) => CourseDetails(course: course, isPurchasedCourse: false),
               ));
             },
           );

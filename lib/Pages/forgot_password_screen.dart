@@ -1,4 +1,3 @@
-
 import 'package:aerovania_app_1/Pages/password_changed_screen.dart';
 import 'package:aerovania_app_1/services/auth/auth_gate.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -115,45 +114,48 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 ),
                 child: Row(
                   children: [
-                    if (isloading)
-                      const Center(child: CircularProgressIndicator()),
-                    if (!isloading)
-                      Expanded(
-                        child: MaterialButton(
-                          color: const Color(0xFF1E232C),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          onPressed: () {
-                            if (_formKey.currentState!.validate()) {
-                              setState(() {
-                                isloading = true;
-                              });
-                              FirebaseAuth.instance
-                                  .sendPasswordResetEmail(
-                                      email: emailController.text)
-                                  .then((value) => Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              PasswordCreatedScreen(isLogged: false))));
-                              setState(() {
-                                isloading = false;
-                              });
-                            }
-                          },
-                          child: const Padding(
-                            padding: EdgeInsets.all(15.0),
-                            child: Text(
-                              "Send Code",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                              ),
-                            ),
-                          ),
+                    // if (isloading)
+                    //   const Center(child: CircularProgressIndicator()),
+                    // if (!isloading)
+                    Expanded(
+                      child: MaterialButton(
+                        color: const Color(0xFF1E232C),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            setState(() {
+                              isloading = true;
+                            });
+                            FirebaseAuth.instance
+                                .sendPasswordResetEmail(
+                                    email: emailController.text)
+                                .then((value) => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            PasswordCreatedScreen(
+                                                isLogged: false))));
+                            setState(() {
+                              isloading = false;
+                            });
+                          }
+                        },
+                        child: Padding(
+                          padding: EdgeInsets.all(15.0),
+                          child: isloading
+                              ? CircularProgressIndicator()
+                              : Text(
+                                  "Send Code",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                  ),
+                                ),
                         ),
                       ),
+                    ),
                   ],
                 ),
               ),

@@ -47,9 +47,24 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
           }
         }
       } on FirebaseAuthException catch (e) {
+        String message;
+        switch (e.code) {
+          case 'wrong-password':
+            message = 'The current password is incorrect.';
+            break;
+          case 'requires-recent-login':
+            message = 'Please re-authenticate and try again.';
+            break;
+          case 'too-many-requests':
+            message = 'Too many requests. Please try again later.';
+            break;
+          default:
+            message = e.message ?? 'An error occurred';
+            break;
+        }
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(e.message ?? 'An error occurred'),
+            content: Text(message),
           ),
         );
       }
@@ -76,9 +91,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
               children: [
                 const SizedBox(height: 20),
                 Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: SizedBox(
                     width: MediaQuery.of(context).size.width * 0.9,
                     child: const Text(
@@ -91,10 +104,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                   ),
                 ),
                 const Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 10,
-                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   child: Text(
                     "Your new password must be unique from those previously used.",
                     style: TextStyle(
@@ -106,31 +116,22 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                 ),
                 const SizedBox(height: 20),
                 Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Container(
                     decoration: BoxDecoration(
                       color: const Color(0xFFF7F8F9),
-                      border: Border.all(
-                        color: const Color(0xFFE8ECF4),
-                      ),
+                      border: Border.all(color: const Color(0xFFE8ECF4)),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Padding(
-                      padding: const EdgeInsets.only(
-                        left: 10,
-                        right: 10,
-                      ),
+                      padding: const EdgeInsets.only(left: 10, right: 10),
                       child: TextFormField(
                         controller: _currentPasswordController,
                         obscureText: true,
                         decoration: const InputDecoration(
                           border: InputBorder.none,
                           hintText: 'Current Password',
-                          hintStyle: TextStyle(
-                            color: Color(0xFF8391A1),
-                          ),
+                          hintStyle: TextStyle(color: Color(0xFF8391A1)),
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -144,31 +145,22 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                 ),
                 const SizedBox(height: 15),
                 Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Container(
                     decoration: BoxDecoration(
                       color: const Color(0xFFF7F8F9),
-                      border: Border.all(
-                        color: const Color(0xFFE8ECF4),
-                      ),
+                      border: Border.all(color: const Color(0xFFE8ECF4)),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Padding(
-                      padding: const EdgeInsets.only(
-                        left: 10,
-                        right: 10,
-                      ),
+                      padding: const EdgeInsets.only(left: 10, right: 10),
                       child: TextFormField(
                         controller: _passwordController,
                         obscureText: true,
                         decoration: const InputDecoration(
                           border: InputBorder.none,
                           hintText: 'New Password',
-                          hintStyle: TextStyle(
-                            color: Color(0xFF8391A1),
-                          ),
+                          hintStyle: TextStyle(color: Color(0xFF8391A1)),
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -184,31 +176,22 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                 ),
                 const SizedBox(height: 15),
                 Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Container(
                     decoration: BoxDecoration(
                       color: const Color(0xFFF7F8F9),
-                      border: Border.all(
-                        color: const Color(0xFFE8ECF4),
-                      ),
+                      border: Border.all(color: const Color(0xFFE8ECF4)),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Padding(
-                      padding: const EdgeInsets.only(
-                        left: 10,
-                        right: 10,
-                      ),
+                      padding: const EdgeInsets.only(left: 10, right: 10),
                       child: TextFormField(
                         controller: _confirmPasswordController,
                         obscureText: true,
                         decoration: const InputDecoration(
                           border: InputBorder.none,
                           hintText: 'Confirm Password',
-                          hintStyle: TextStyle(
-                            color: Color(0xFF8391A1),
-                          ),
+                          hintStyle: TextStyle(color: Color(0xFF8391A1)),
                         ),
                         validator: (value) {
                           if (value != _passwordController.text) {
@@ -222,10 +205,8 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                 ),
                 const SizedBox(height: 40),
                 Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 5,
-                  ),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                   child: Row(
                     children: [
                       Expanded(

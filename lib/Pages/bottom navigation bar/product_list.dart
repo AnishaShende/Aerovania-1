@@ -41,7 +41,7 @@ class _ProductListState extends State<ProductList> {
                   onPressed: () {
                     Scaffold.of(context).openDrawer();
                   },
-                  icon: !widget.isNav ? Icon(Icons.menu, color: Colors.black) : Icon(Icons.arrow_back, color: Colors.black),
+                  icon: Icon(Icons.menu, color: Colors.black),
                 ),
               ),
               StreamBuilder<QuerySnapshot>(

@@ -1,15 +1,25 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:async';
 
 import '../../models/course.dart';
 import '../../components/color.dart';
+import '../../widgets/category_box.dart';
 import '../course_details.dart';
 import '../course_items.dart';
+import '../lists/all_categories.dart';
+import '../lists/filtered_list.dart';
+import '../../data/courses_data.dart' as Courses;
 
 enum SortBy { lowToHigh, highToLow }
 
 final searchQueryProvider = StateProvider<String>((ref) => '');
+final debouncedSearchQueryProvider =
+    StateNotifierProvider<DebouncedSearchNotifier, String>((ref) {
+  return DebouncedSearchNotifier();
+});
+
 final bookmarkedFilterProvider = StateProvider<bool>((ref) => false);
 final sortByProvider = StateProvider<SortBy>((ref) => SortBy.lowToHigh);
 
@@ -18,11 +28,32 @@ final durationFilterProvider = StateProvider<bool>((ref) => false);
 final lessonsFilterProvider = StateProvider<bool>((ref) => false);
 final priceFilterProvider = StateProvider<bool>((ref) => false);
 
-final coursesProvider = FutureProvider<List<Course>>((ref) async {
-  final querySnapshot =
-      await FirebaseFirestore.instance.collection('courses').get();
-  return querySnapshot.docs.map((doc) => Course.fromMap(doc.data())).toList();
+final categoriesProvider =
+    StreamProvider.autoDispose<List<DocumentSnapshot>>((ref) {
+  return FirebaseFirestore.instance
+      .collection('categories')
+      .snapshots()
+      .map((snapshot) => snapshot.docs);
 });
+
+class DebouncedSearchNotifier extends StateNotifier<String> {
+  Timer? _debounce;
+
+  DebouncedSearchNotifier() : super('');
+
+  void updateQuery(String query) {
+    if (_debounce?.isActive ?? false) _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 300), () {
+      state = query;
+    });
+  }
+
+  @override
+  void dispose() {
+    _debounce?.cancel();
+    super.dispose();
+  }
+}
 
 class SearchScreen extends ConsumerStatefulWidget {
   const SearchScreen({Key? key}) : super(key: key);
@@ -32,40 +63,33 @@ class SearchScreen extends ConsumerStatefulWidget {
 }
 
 class _SearchScreenState extends ConsumerState<SearchScreen> {
-  late Future<List<String>> _categoriesFuture;
+  late ScrollController _scrollController;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final FocusNode _focusNode = FocusNode();
 
   @override
   void initState() {
     super.initState();
-    _categoriesFuture = fetchCategories();
+    _scrollController = ScrollController();
   }
 
   @override
   void dispose() {
+    _scrollController.dispose();
     _focusNode.dispose();
     super.dispose();
   }
 
-  Future<List<String>> fetchCategories() async {
-    final querySnapshot =
-        await FirebaseFirestore.instance.collection('categories').get();
-    return querySnapshot.docs.map((doc) => doc.id).toList();
-  }
-
   @override
   Widget build(BuildContext context) {
-    final scrollController = ScrollController();
-    final _key = GlobalKey<ScaffoldState>();
-
     return SafeArea(
       child: Scaffold(
-        key: _key,
+        key: _scaffoldKey,
         backgroundColor: const Color(0xffbfe0f8),
         body: Padding(
           padding: const EdgeInsets.all(8.0),
           child: CustomScrollView(
-            controller: scrollController,
+            controller: _scrollController,
             slivers: [
               SliverAppBar(
                 automaticallyImplyLeading: false,
@@ -74,28 +98,18 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                 title: getAppBar(),
                 leading: IconButton(
                   onPressed: () {
-                    Navigator.pop(context);
+                    Scaffold.of(context).openDrawer();
                   },
-                  icon: const Icon(Icons.arrow_back, color: Colors.black),
+                  icon: const Icon(Icons.menu, color: Colors.black),
                 ),
               ),
               SliverToBoxAdapter(
                 child: getSearchBox(context, ref),
               ),
-              Consumer(
-                builder: (context, ref, child) {
-                  final coursesAsyncValue = ref.watch(coursesProvider);
-                  return coursesAsyncValue.map(
-                    data: (courses) => searchFunc(context, ref, courses.value),
-                    loading: (_) => SliverToBoxAdapter(
-                      child: Center(child: CircularProgressIndicator()),
-                    ),
-                    error: (error) => SliverToBoxAdapter(
-                      child: Center(child: Text('Error: ${error.error}')),
-                    ),
-                  );
-                },
+              SliverToBoxAdapter(
+                child: getCategories(context, ref),
               ),
+              searchFunc(context, ref),
             ],
           ),
         ),
@@ -140,28 +154,23 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                   ),
                 ],
               ),
-              child: Consumer(
-                builder: (context, ref, child) {
-                  return TextField(
-                    focusNode: _focusNode,
-                    onChanged: (value) {
-                      ref.read(searchQueryProvider.notifier).state =
-                          value.trim();
-                    },
-                    onTap: () {
-                      _focusNode.requestFocus();
-                    },
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.search),
-                      border: InputBorder.none,
-                      hintText: 'Search',
-                      hintStyle: const TextStyle(
-                        color: Colors.grey,
-                        fontSize: 15,
-                      ),
-                    ),
-                  );
+              child: TextField(
+                textCapitalization: TextCapitalization.words,
+                focusNode: _focusNode,
+                onChanged: (value) {
+                  ref
+                      .read(debouncedSearchQueryProvider.notifier)
+                      .updateQuery(value.trim());
                 },
+                decoration: InputDecoration(
+                  prefixIcon: const Icon(Icons.search),
+                  border: InputBorder.none,
+                  hintText: 'Search',
+                  hintStyle: const TextStyle(
+                    color: Colors.grey,
+                    fontSize: 15,
+                  ),
+                ),
               ),
             ),
           ),
@@ -180,17 +189,17 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
               ),
               child: const Icon(
                 Icons.settings_input_component_outlined,
-                color: Colors.black87,
+                color: Colors.black54,
               ),
             ),
-          )
+          ),
         ],
       ),
     );
   }
 
   void showFilterDialog(BuildContext context, WidgetRef ref) {
-    String selectedFilter = 'Rating';
+    String selectedFilter = 'Rating'; // Default filter selection
 
     showDialog(
       context: context,
@@ -212,8 +221,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                           .map<DropdownMenuItem<String>>((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
-                          child: Text(value,
-                              style: TextStyle(fontWeight: FontWeight.normal)),
+                          child: Text(value),
                         );
                       }).toList(),
                       onChanged: (String? newValue) {
@@ -276,83 +284,136 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
       },
     );
   }
-}
 
-Widget searchFunc(BuildContext context, WidgetRef ref, List<Course> courses) {
-  final searchQuery = ref.watch(searchQueryProvider).toLowerCase();
-  List<Course> filteredCourses = courses.where((course) {
-    return course.name.toLowerCase().contains(searchQuery);
-  }).toList();
+  Widget getCategories(BuildContext context, WidgetRef ref) {
+    final categoriesAsyncValue = ref.watch(categoriesProvider);
 
-  final sortBy = ref.watch(sortByProvider);
-
-  if (ref.watch(ratingFilterProvider)) {
-    filteredCourses.sort((a, b) => compareCourseReview(a, b, sortBy));
-  } else if (ref.watch(durationFilterProvider)) {
-    filteredCourses.sort((a, b) => compareCourseDuration(a, b, sortBy));
-  } else if (ref.watch(lessonsFilterProvider)) {
-    filteredCourses.sort((a, b) => compareCourseSession(a, b, sortBy));
-  } else if (ref.watch(priceFilterProvider)) {
-    filteredCourses.sort((a, b) => compareCoursePrice(a, b, sortBy));
+    return categoriesAsyncValue.when(
+      data: (categories) {
+        return Padding(
+          padding: const EdgeInsets.all(2.0),
+          child: Container(
+            height: MediaQuery.of(context).size.height * .15,
+            width: MediaQuery.of(context).size.width * 1,
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.only(left: 15, top: 10, bottom: 10),
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: List.generate(
+                  categories.length,
+                  (index) => Padding(
+                    padding: const EdgeInsets.only(right: 15),
+                    child: CategoryBox(
+                      selectedColor: Colors.white,
+                      data: categories[index].data() as Map<String, dynamic>,
+                      onTap: () {
+                        if (index == 0) {
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => AllCategories(),
+                          ));
+                        } else {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => FilteredCoursesScreen(
+                                category: categories[index]['name'],
+                                courses: Courses.courses,
+                              ),
+                            ),
+                          );
+                        }
+                      },
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+      loading: () => Center(child: CircularProgressIndicator()),
+      error: (err, stack) => Center(child: Text('Error fetching categories')),
+    );
   }
 
-  if (filteredCourses.isEmpty) {
-    return SliverToBoxAdapter(
-      child: AnimatedSwitcher(
-        duration: Duration(milliseconds: 300),
-        child: Center(
-          child: Text(
-            'No Results Found',
-            style: TextStyle(
-                color: Colors.black54,
-                fontWeight: FontWeight.bold,
-                fontSize: 20),
+  Widget searchFunc(BuildContext context, WidgetRef ref) {
+    final searchQuery = ref.watch(debouncedSearchQueryProvider).toLowerCase();
+    final sortBy = ref.watch(sortByProvider);
+
+    List<Course> filteredCourses = Courses.courses.where((course) {
+      return course.name.toLowerCase().contains(searchQuery);
+    }).toList();
+
+    if (ref.watch(ratingFilterProvider)) {
+      filteredCourses.sort((a, b) => compareCourseReview(a, b, sortBy));
+    } else if (ref.watch(durationFilterProvider)) {
+      filteredCourses.sort((a, b) => compareCourseDuration(a, b, sortBy));
+    } else if (ref.watch(lessonsFilterProvider)) {
+      filteredCourses.sort((a, b) => compareCourseSession(a, b, sortBy));
+    } else if (ref.watch(priceFilterProvider)) {
+      filteredCourses.sort((a, b) => compareCoursePrice(a, b, sortBy));
+    }
+
+    if (filteredCourses.isEmpty) {
+      return SliverToBoxAdapter(
+        child: AnimatedSwitcher(
+          duration: Duration(milliseconds: 300),
+          child: Center(
+            child: Text(
+              'No Results Found',
+              style: TextStyle(
+                  color: Colors.black54,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20),
+            ),
           ),
         ),
-      ),
-    );
-  } else {
-    return SliverList(
-      delegate: SliverChildBuilderDelegate(
-        (context, index) {
-          return Padding(
-            padding: const EdgeInsets.only(top: 5, left: 15, right: 15),
-            child: CourseItem(
-              data: filteredCourses[index],
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) =>
-                      CourseDetails(course: filteredCourses[index]),
-                ));
-              },
-            ),
-          );
-        },
-        childCount: filteredCourses.length,
-      ),
-    );
+      );
+    } else {
+      return SliverList(
+        delegate: SliverChildBuilderDelegate(
+          (context, index) {
+            return Padding(
+              padding: const EdgeInsets.only(top: 5, left: 15, right: 15),
+              child: CourseItem(
+                data: filteredCourses[index],
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => CourseDetails(
+                      course: filteredCourses[index],
+                      isPurchasedCourse: false,
+                    ),
+                  ));
+                },
+              ),
+            );
+          },
+          childCount: filteredCourses.length,
+        ),
+      );
+    }
   }
-}
 
-int compareCoursePrice(Course a, Course b, SortBy sortBy) {
-  final comparison = double.parse(a.price.substring(2))
-      .compareTo(double.parse(b.price.substring(2)));
-  return sortBy == SortBy.lowToHigh ? comparison : -comparison;
-}
+  int compareCoursePrice(Course a, Course b, SortBy sortBy) {
+    final comparison = double.parse(a.price.substring(2))
+        .compareTo(double.parse(b.price.substring(2)));
+    return sortBy == SortBy.lowToHigh ? comparison : -comparison;
+  }
 
-int compareCourseReview(Course a, Course b, SortBy sortBy) {
-  final comparison = double.parse(b.review).compareTo(double.parse(a.review));
-  return sortBy == SortBy.lowToHigh ? comparison : -comparison;
-}
+  int compareCourseReview(Course a, Course b, SortBy sortBy) {
+    final comparison = double.parse(b.review).compareTo(double.parse(a.review));
+    return sortBy == SortBy.lowToHigh ? comparison : -comparison;
+  }
 
-int compareCourseDuration(Course a, Course b, SortBy sortBy) {
-  final comparison = int.parse(a.duration.split(' ')[0])
-      .compareTo(int.parse(b.duration.split(' ')[0]));
-  return sortBy == SortBy.lowToHigh ? comparison : -comparison;
-}
+  int compareCourseDuration(Course a, Course b, SortBy sortBy) {
+    final comparison = int.parse(a.duration.split(' ')[0])
+        .compareTo(int.parse(b.duration.split(' ')[0]));
+    return sortBy == SortBy.lowToHigh ? comparison : -comparison;
+  }
 
-int compareCourseSession(Course a, Course b, SortBy sortBy) {
-  final comparison = int.parse(a.session.split(' ')[0])
-      .compareTo(int.parse(b.session.split(' ')[0]));
-  return sortBy == SortBy.lowToHigh ? comparison : -comparison;
+  int compareCourseSession(Course a, Course b, SortBy sortBy) {
+    final comparison = int.parse(a.session.split(' ')[0])
+        .compareTo(int.parse(b.session.split(' ')[0]));
+    return sortBy == SortBy.lowToHigh ? comparison : -comparison;
+  }
 }

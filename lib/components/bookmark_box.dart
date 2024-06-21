@@ -15,20 +15,33 @@ class BookmarkBox extends ConsumerStatefulWidget {
 class _BookmarkBoxState extends ConsumerState<BookmarkBox> {
   @override
   Widget build(BuildContext context) {
-    final favorites = ref.watch(favoriteProvider);
-    final isFavorited = favorites.contains(widget.course);
+    final favoriteState = ref.watch(favoriteProvider);
+    final isFavorited = favoriteState.courses.contains(widget.course);
+
+    if (favoriteState.isLoading) {
+      return Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+
     return IconButton(
       icon: Icon(
         isFavorited ? Icons.bookmark : Icons.bookmark_border,
       ),
-      onPressed: () {
-        final wasAdded =
-            ref.read(favoriteProvider.notifier).favoriteStatus(widget.course);
+      onPressed: () async {
+        final wasAdded = await ref
+            .read(favoriteProvider.notifier)
+            .favoriteStatus(widget.course);
         ScaffoldMessenger.of(context).clearSnackBars();
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text(wasAdded
-                ? 'Course added to favorites!'
-                : 'Course removed from favorites!')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              wasAdded
+                  ? 'Course added to favorites!'
+                  : 'Course removed from favorites!',
+            ),
+          ),
+        );
       },
     );
   }

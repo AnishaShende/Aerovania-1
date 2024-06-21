@@ -91,7 +91,7 @@ class _AllCoursesState extends State<AllCourses> {
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) =>
-                                    CourseDetails(course: allCourses[index]),
+                                    CourseDetails(course: allCourses[index], isPurchasedCourse: false),
                               ));
                             },
                           ),

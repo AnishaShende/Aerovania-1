@@ -13,8 +13,10 @@ import '../services/video/video_player.dart';
 import '../widgets/custom_image.dart';
 
 class CourseDetails extends StatefulWidget {
-  const CourseDetails({super.key, required this.course});
+  const CourseDetails(
+      {super.key, required this.course, required this.isPurchasedCourse});
   final Course course;
+  final bool isPurchasedCourse;
 
   @override
   State<CourseDetails> createState() => _CourseDetailsState();
@@ -38,15 +40,41 @@ class _CourseDetailsState extends State<CourseDetails>
         .toList();
   }
 
+  /// d0ynSEA6kANtWUO9wnBOkzfODmK2
+  /// Error getting App Check token; using placeholder token instead.
+  /// Error: com.google.firebase.FirebaseException: Error returned from API.
+  /// code: 400 body: App not registered: 1:137939624185:android:9cd831db7c06339d5fc228.
+  /// Ignoring header X-Firebase-Locale because its value was null.
+  Future<void> checkIfPurchased() async {
+    try {
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .get();
+      List<dynamic> purchasedCourses = userDoc['purchasedCourses'] ?? [];
+      setState(() {
+        isPurchased = purchasedCourses.contains(widget.course.id.toString());
+      });
+    } catch (e) {
+      print('Error checking if course is purchased: $e');
+      setState(() {
+        isPurchased = false;
+      });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     tabController = TabController(length: 2, vsync: this);
     courseData = widget.course;
+    checkIfPurchased(); // Check if the course is purchased
   }
 
   @override
   Widget build(BuildContext context) {
+    widget.isPurchasedCourse ? isPurchased = true : isPurchased = false;
+
     return Scaffold(
       appBar: buildAppBar(),
       body: buildBody(),
